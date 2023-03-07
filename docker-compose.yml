@@ -1,0 +1,12 @@
+version: '3.11'
+
+services:
+  web:
+    build: ./four_hours
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./four_hours/:/usr/src/four_hours/
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env.dev
