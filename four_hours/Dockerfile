@@ -27,7 +27,3 @@ COPY . .
 
 # run entrypoint.sh
 ENTRYPOINT ["/usr/src/four_hours/entrypoint.sh"]
-
-# EXPOSE 8000
-# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "four_hours.wsgi:application"]
