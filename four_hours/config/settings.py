@@ -40,6 +40,7 @@ CUSTOM_APPS = [
 
 THIRD_PARTY_APPS = [
     "rest_framework",
+    'firebase_auth',
 ]
 
 SYSTEM_APPS = [
@@ -144,3 +145,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
 
 # TODO: Split settings.py into multiple files for Production and
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'REST_framework.authentication.SessionAuthentication',
+        # 'firebase_auth.authentication.FirebaseAuthentication',
+    ),
+}
