@@ -10,6 +10,11 @@ class User(AbstractUser):
     class Meta:
         default_related_name = "users"
 
+    uid = models.CharField(
+        max_length=150,
+        blank=False,
+        default="",
+    )
     name = models.CharField(
         max_length=150,
         blank=False,

@@ -1,7 +1,6 @@
 import os
 
 from users.models.users import User
-from django.utils import timezone
 from firebase_admin import auth
 from firebase_admin import credentials
 from firebase_admin import initialize_app
@@ -42,7 +41,6 @@ class FirebaseAuthentication(BaseAuthentication):
             decoded_token = auth.verify_id_token(id_token)
         except Exception:
             raise InvalidAuthToken("Invalid auth token")
-            pass
 
         if not id_token or not decoded_token:
             return None
@@ -52,7 +50,9 @@ class FirebaseAuthentication(BaseAuthentication):
         except Exception:
             raise FirebaseError()
 
-        user, created = User.objects.get_or_create(username=uid)
-        user.profile.last_activity = timezone.localtime()
+        # uid에 대해서 고민 좀 해보자
+        # user, created = User.objects.get_or_create(uid=uid)
+        user = User.objects.get(uid=uid)
+        # user.profile.last_activity = timezone.localtime()
 
         return (user, None)
