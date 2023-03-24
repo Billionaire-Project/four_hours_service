@@ -16,26 +16,24 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+APPS_DIR = BASE_DIR / "apps"
 
+# environment variables
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get("DEBUG", default=0))
 
-# ALLOWED_HOSTS = ["*"]  # TODO: Change this to your domain
+# TODO: Change this to your domain
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 
 # Application definition
 
 CUSTOM_APPS = [
-    "common.apps.CommonConfig",
-    "users.apps.UsersConfig",
+    "apps.commons.apps.CommonsConfig",
+    "apps.users.apps.UsersConfig",
 ]
 
 THIRD_PARTY_APPS = [

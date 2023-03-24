@@ -5,6 +5,8 @@ from django.contrib.auth.models import AbstractUser
 # config/settings.py에 AUTH_USER_MODEL = 'users.User'를 추가해야함
 # 중간에 있는 유저 데이터를 옮길 수 없으므로 프로젝트의 시작에서 만들어 줘야 함
 
+# 소셜이 정해지면 유저 테이블 수정해야 함
+
 
 class User(AbstractUser):
     class Meta:

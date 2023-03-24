@@ -11,6 +11,7 @@
 - DRF
 - postgresql
 - firebase
+- openai
 
 ## Installation _ development
 
