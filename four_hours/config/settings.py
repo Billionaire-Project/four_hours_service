@@ -34,6 +34,7 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 CUSTOM_APPS = [
     "apps.commons.apps.CommonsConfig",
     "apps.users.apps.UsersConfig",
+    "apps.posts.apps.PostsConfig",
 ]
 
 THIRD_PARTY_APPS = [
