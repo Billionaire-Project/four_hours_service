@@ -1,5 +1,5 @@
 from django.db import models
-from commons.models.common_model import CommonModel
+from apps.commons.models.common_model import CommonModel
 
 
 class PostLike(CommonModel):

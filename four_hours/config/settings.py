@@ -39,7 +39,8 @@ CUSTOM_APPS = [
 
 THIRD_PARTY_APPS = [
     "rest_framework",
-    'firebase_auth',
+    "firebase_auth",
+    "drf_yasg",
 ]
 
 SYSTEM_APPS = [
@@ -147,7 +148,7 @@ AUTH_USER_MODEL = "users.User"
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'REST_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         # 'firebase_auth.authentication.FirebaseAuthentication',
     ),
 }
