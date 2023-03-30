@@ -9,7 +9,6 @@ class PostAdmin(admin.ModelAdmin):
     # show all fields in admin
     list_display = (
         "__str__",
-        "title",
         "content",
         "user",
     )
