@@ -147,8 +147,8 @@ AUTH_USER_MODEL = "users.User"
 # TODO: Split settings.py into multiple files for Production and
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
-        # 'firebase_auth.authentication.FirebaseAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.SessionAuthentication",
+        "config.authentication.FirebaseAuthentication",
     ),
 }
