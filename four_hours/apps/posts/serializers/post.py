@@ -5,7 +5,7 @@ from apps.posts.models import post
 
 class PostSerializer(ModelSerializer):
     class Meta:
-        model = post
+        model = post.Post
         fields = (
             "id",
             "user",

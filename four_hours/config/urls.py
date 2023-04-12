@@ -11,15 +11,15 @@ urlpatterns = [
 
 schema_view = get_schema_view(
     openapi.Info(
-        title='Four Hours API',
-        default_version='v1',
-        description='''
+        title="Four Hours API",
+        default_version="v1",
+        description="""
         Four Hours API 문서입니다.
         작성자 : 이성우
-        ''',
-        terms_of_service='',
-        contact=openapi.Contact(name='이성우', email='seongwoo.lee@jjaann.com'),
-        license=openapi.License(name='four_hours_api_docs')
+        """,
+        terms_of_service="",
+        contact=openapi.Contact(name="이성우", email="seongwoo.lee@jjaann.com"),
+        license=openapi.License(name="four_hours_api_docs"),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
@@ -28,13 +28,21 @@ schema_view = get_schema_view(
 
 
 urlpatterns += [
-    path('swagger<str:format>', schema_view.without_ui(
-        cache_timeout=0), name='schema-json'),
-    path('swagger/', schema_view.with_ui('swagger',
-         cache_timeout=0), name='schema-swagger-ui'),
-    path('docs/', schema_view.with_ui('redoc',
-         cache_timeout=0), name='schema-redoc'),
+    path(
+        "swagger<str:format>",
+        schema_view.without_ui(cache_timeout=0),
+        name="schema-json",
+    ),
+    path(
+        "swagger/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
+    path("docs/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
+]
 
-    # path("users/", include("apps.users.urls")),
+
+urlpatterns += [
+    path("api/v1/users/", include("apps.users.urls")),
     path("api/v1/posts/", include("apps.posts.urls")),
 ]

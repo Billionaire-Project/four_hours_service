@@ -1,7 +1,7 @@
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework import exceptions
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from apps.posts.serializers.post import PostSerializer
 from apps.posts.models.post import Post
@@ -9,20 +9,21 @@ from apps.posts.models.post import Post
 
 # TODO: post를 get할 수 있는 자격 추가 혹은 자격에 따른 return 값 변경
 class PostList(APIView):
-    '''
+    """
     PostList Api
 
     ---
     # 내용
-    '''
+    """
 
     def get(self, request, format=None):
-        '''
-        method
+        # TODO: pagination
+        """
+        post list
 
         ---
         # 내용
-        '''
+        """
         posts = Post.objects.all()
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

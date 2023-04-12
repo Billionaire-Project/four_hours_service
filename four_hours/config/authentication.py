@@ -57,6 +57,9 @@ class FirebaseAuthentication(BaseAuthentication):
         except Exception:
             raise FirebaseError()
 
+        # 여기서 uid는 firebase에서 받아온 것
+        # https://firebase.google.com/docs/auth/admin/verify-id-tokens?hl=ko
+
         # uid에 대해서 고민 좀 해보자
         # user, created = User.objects.get_or_create(uid=uid)
         # Get or create the user

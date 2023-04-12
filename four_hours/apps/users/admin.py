@@ -11,8 +11,9 @@ class CustomUserAdmin(UserAdmin):
             "Profile",
             {
                 "fields": (
+                    # "id", 왜 id가 안나오지?
                     "username",
-                    "password",
+                    # "password",
                     "name",
                     "phone_number",
                 ),
