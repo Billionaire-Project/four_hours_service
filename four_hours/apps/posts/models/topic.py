@@ -6,6 +6,7 @@ class Topic(CommonModel):
 
     """
     Topic Model Definition
+    사용자가 입력하는 혹은 GPT가 생성하는 토픽
     매일 새로운 토픽을 생성하고 각 시간마다 사용자에게 추천해줌
     - Todo : scheduler로 매일 토픽 생성하는 기능 추가
     - Todo : admin에서 토픽 추가, 삭제 기능 추가

@@ -9,9 +9,14 @@ class PostDeleteReasonAdmin(admin.ModelAdmin):
 
     # show all fields in admin
     list_display = (
+        "id",
         "__str__",
-        "reason",
         "is_public",
+    )
+
+    list_display_links = (
+        "id",
+        "__str__",
     )
 
     def __str__(self):

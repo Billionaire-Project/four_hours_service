@@ -18,6 +18,12 @@ class Post(CommonModel):
     # delete option
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True)
+    deleted_reason = models.ForeignKey(
+        "posts.PostDeleteReason",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
         return self.content
