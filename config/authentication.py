@@ -1,5 +1,7 @@
 import os
 
+from django.utils import timezone
+
 from apps.users.models.user import User
 from firebase_admin import auth
 from firebase_admin import credentials
@@ -54,6 +56,13 @@ class FirebaseAuthentication(BaseAuthentication):
         # Get the uid of an user
         try:
             uid = decoded_token.get("uid")
+            email = decoded_token.get("email")
+            name = decoded_token.get("name")
+            username = email.split("@").pop(0)
+            now = timezone.now()
+
+            print(f"debug: {uid}, {email}, {name}, {username}")
+
         except Exception:
             raise FirebaseError()
 
@@ -61,9 +70,17 @@ class FirebaseAuthentication(BaseAuthentication):
         # https://firebase.google.com/docs/auth/admin/verify-id-tokens?hl=ko
 
         # uid에 대해서 고민 좀 해보자
-        # user, created = User.objects.get_or_create(uid=uid)
-        # Get or create the user
-        user = User.objects.get(uid=uid)
-        # user.profile.last_activity = timezone.localtime()
+        user, _ = User.objects.get_or_create(
+            uid=uid,
+            defaults={
+                "username": username,
+                "email": email,
+                "name": name,
+                "date_joined": now,
+            },
+        )
+
+        user.last_login = now
+        user.save()
 
         return (user, None)

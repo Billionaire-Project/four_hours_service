@@ -13,9 +13,7 @@ class CustomUserAdmin(UserAdmin):
                 "fields": (
                     # "id", 왜 id가 안나오지?
                     "username",
-                    # "password",
                     "name",
-                    "phone_number",
                 ),
             },
         ),
@@ -47,7 +45,6 @@ class CustomUserAdmin(UserAdmin):
         "id",
         "username",
         "name",
-        "phone_number",
     )
     list_display_links = (
         "id",
