@@ -1,0 +1,5 @@
+venv
+.gitingore
+docker-compose.yml
+*.ipynb
+readme.md

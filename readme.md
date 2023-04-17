@@ -13,8 +13,7 @@
 - firebase
 - openai
 
-## Installation _ development
-
+## Installation \_ development
 
 ### in M1 mac add environment variable
 
@@ -22,3 +21,9 @@
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
 ```
 
+### run
+
+```bash
+# in dev
+docker-compose --env-file .env.dev up --build
+```

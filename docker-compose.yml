@@ -1,16 +1,17 @@
-version: '3'
+version: "3"
 
 services:
-  web:
-    build: ./four_hours
+  django:
+    build:
+      context: .
+      dockerfile: ${DOCKERFILE}
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./four_hours/:/usr/src/four_hours/
+      - ./:/usr/src/four_hours_service/
     ports:
       - 8000:8000
-    env_file:
-      - ./.env.dev
-  
+    env_file: ${ENVFILE}
+
   db:
     image: postgres:15.2-alpine
     volumes:
@@ -18,9 +19,9 @@ services:
     ports:
       - 5432:5432
     environment:
-      - POSTGRES_DB=four_hours_dev
-      - POSTGRES_USER=Lukaid
-      - POSTGRES_PASSWORD=bilp1234
+      POSTGRES_DB: ${SQL_DATABASE}
+      POSTGRES_USER: ${SQL_USER}
+      POSTGRES_PASSWORD: ${SQL_PASSWORD}
 
 volumes:
   postgres_data:
