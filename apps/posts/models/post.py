@@ -25,5 +25,8 @@ class Post(CommonModel):
         blank=True,
     )
 
+    # gpt obsured
+    is_obscured = models.BooleanField(default=False)
+
     def __str__(self):
         return self.content

@@ -21,6 +21,8 @@ class Topic(CommonModel):
     is_used = models.BooleanField(default=False)
     # 해당 토픽이 언제 사용되었는지
     topic_used_at = models.DateTimeField(null=True)
+    # 해당 토픽을 사용할 것인지 (default: True)
+    is_use = models.BooleanField(default=True)
 
     # def __str__(self):
     #     return self.topic

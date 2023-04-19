@@ -1,48 +1,53 @@
 from rest_framework import status
-from rest_framework import exceptions
+
+# from rest_framework import exceptions
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
-from apps.posts.serializers.post import PostSerializer
-from apps.posts.models.post import Post
+from drf_yasg.utils import swagger_auto_schema
+
+# from drf_yasg import openapi
+
+from apps.posts.serializers import PostGetSerializer, PostPostSerializer
+from apps.posts.models import Post
 
 
-# TODO: post를 get할 수 있는 자격 추가 혹은 자격에 따른 return 값 변경
-class PostList(APIView):
-    """
-    PostList Api
+class Posts(APIView):
+    permission_classes = [IsAuthenticated]
 
-    ---
-    # 내용
-    """
-
+    @swagger_auto_schema(
+        operation_description="""
+        ## receipt확인 후 권한이 있는 유저에게 반환
+        """,
+        responses={
+            200: PostGetSerializer(many=True),
+        },
+    )
     def get(self, request, format=None):
         # TODO: pagination
+        posts = Post.objects.all()
+        serializer = PostGetSerializer(
+            posts,
+            many=True,
+            context={"request": request},
+        )
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_description="post를 작성합니다.",
+        request_body=PostPostSerializer,
+        responses={
+            200: PostPostSerializer(),
+        },
+    )
+    def post(self, request, format=None):
         """
-        post list
 
         ---
-        # 내용
+        포스트 작성
         """
-        posts = Post.objects.all()
-        serializer = PostSerializer(posts, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class PostId(APIView):
-    def get_object(self, pk):
-        try:
-            return Post.objects.get(pk=pk)
-        except Post.DoesNotExist:
-            raise exceptions.NotFound
-
-    def get(self, request, pk, format=None):
-        post = self.get_object(pk)
-        serializer = PostSerializer(post)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def post(self, request, format=None):
-        serializer = PostSerializer(data=request.data)
+        serializer = PostPostSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

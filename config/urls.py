@@ -18,7 +18,7 @@ schema_view = get_schema_view(
         작성자 : 이성우
         """,
         terms_of_service="",
-        contact=openapi.Contact(name="이성우", email="seongwoo.lee@jjaann.com"),
+        contact=openapi.Contact(name="이성우", email="crescent3859@gmail.com"),
         license=openapi.License(name="four_hours_api_docs"),
     ),
     public=True,

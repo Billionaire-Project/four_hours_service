@@ -47,3 +47,8 @@ class User(AbstractUser):
 
     first_name = None
     last_name = None
+
+    # delete option
+    is_deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    # deleted_reason
