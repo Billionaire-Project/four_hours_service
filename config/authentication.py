@@ -2,14 +2,13 @@ import os
 
 from django.utils import timezone
 
-from apps.users.models.user import User
+from apps.users.models import User, UserSession
 from firebase_admin import auth
 from firebase_admin import credentials
 from firebase_admin import initialize_app
-from rest_framework.authentication import BaseAuthentication
+from rest_framework import authentication, exceptions
 
 from .exceptions import FirebaseError
-from .exceptions import InvalidAuthToken
 from .exceptions import NoAuthToken
 
 cred = credentials.Certificate(
@@ -32,7 +31,7 @@ cred = credentials.Certificate(
 default_app = initialize_app(cred)
 
 
-class FirebaseAuthentication(BaseAuthentication):
+class FirebaseAuthentication(authentication.BaseAuthentication):
     # override authenticate method and write our custom firebase authentication.#
 
     def authenticate(self, request):
@@ -46,8 +45,23 @@ class FirebaseAuthentication(BaseAuthentication):
         decoded_token = None
         try:
             decoded_token = auth.verify_id_token(id_token)
-        except Exception:
-            raise InvalidAuthToken("Invalid auth token")
+        except ValueError:
+            raise exceptions.AuthenticationFailed(
+                "JWT was found to be invalid, or the App’s project ID cannot "
+                "be determined."
+            )
+        except (
+            auth.InvalidIdTokenError,
+            auth.ExpiredIdTokenError,
+            auth.RevokedIdTokenError,
+            auth.CertificateFetchError,
+        ) as exc:
+            if exc.code == "ID_TOKEN_REVOKED":
+                raise exceptions.AuthenticationFailed(
+                    "Token revoked, inform the user to reauthenticate or " "signOut()."
+                )
+            else:
+                raise exceptions.AuthenticationFailed("Token is invalid.")
 
         # Return Nothing
         if not id_token or not decoded_token:
@@ -57,19 +71,16 @@ class FirebaseAuthentication(BaseAuthentication):
         try:
             uid = decoded_token.get("uid")
             email = decoded_token.get("email")
-            name = decoded_token.get("name")
+            name = decoded_token.get("name") or ""
             username = email.split("@").pop(0)
+            picture = decoded_token.get("picture")
             now = timezone.now()
 
-            print(f"debug: {uid}, {email}, {name}, {username}")
+            print(f"debug--- decoded_token: {decoded_token}")
 
         except Exception:
             raise FirebaseError()
 
-        # 여기서 uid는 firebase에서 받아온 것
-        # https://firebase.google.com/docs/auth/admin/verify-id-tokens?hl=ko
-
-        # uid에 대해서 고민 좀 해보자
         user, _ = User.objects.get_or_create(
             uid=uid,
             defaults={
@@ -77,10 +88,25 @@ class FirebaseAuthentication(BaseAuthentication):
                 "email": email,
                 "name": name,
                 "date_joined": now,
+                "firebase_picture": picture,
             },
         )
 
         user.last_login = now
         user.save()
+
+        # session
+        login_time = timezone.datetime.fromtimestamp(decoded_token["auth_time"])
+        expired_time = timezone.datetime.fromtimestamp(decoded_token["exp"])
+
+        user_session, _ = UserSession.objects.get_or_create(
+            user=user,
+            login_time=login_time,
+            defaults={
+                "logout_time": None,
+                "session_expire_time": expired_time,
+                "is_expired": False,
+            },
+        )
 
         return (user, None)

@@ -14,6 +14,7 @@ class CustomUserAdmin(UserAdmin):
                     # "id", 왜 id가 안나오지?
                     "username",
                     "name",
+                    "firebase_picture",
                 ),
             },
         ),
@@ -40,6 +41,11 @@ class CustomUserAdmin(UserAdmin):
                 "classes": ("collapse",),
             },
         ),
+    )
+    readonly_fields = (
+        "firebase_picture",
+        "last_login",
+        "date_joined",
     )
     list_display = (
         "id",

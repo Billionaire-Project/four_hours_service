@@ -41,6 +41,12 @@ class User(AbstractUser):
         null=False,
         blank=False,
     )
+    firebase_picture = models.URLField(
+        max_length=255,
+        null=True,
+        blank=True,
+        default="",
+    )
     # 유저를 식별하는 필드를 email로 변경
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
