@@ -16,6 +16,7 @@ class Login(APIView):
     @swagger_auto_schema(
         operation_description="""
         ## 로그인 시 요청하는 api
+        - firebase auth login과 별개로 로그인 할때 요청해주세요
         """,
         responses={
             200: MeSerializer(),

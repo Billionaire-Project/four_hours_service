@@ -18,6 +18,7 @@ class Logout(APIView):
     @swagger_auto_schema(
         operation_description="""
         ## 로그아웃 시 요청하는 api
+        - firebase auth logout과 별개로 로그아웃 할때 요청해주세요
         """,
         responses={
             200: "HTTP_200_OK",
