@@ -12,9 +12,9 @@ class CustomUserAdmin(UserAdmin):
             {
                 "fields": (
                     # "id", 왜 id가 안나오지?
-                    "email",
                     "name",
-                    "display_name",
+                    "username",
+                    "email",
                     "firebase_picture",
                 ),
             },
@@ -44,17 +44,18 @@ class CustomUserAdmin(UserAdmin):
         ),
     )
     readonly_fields = (
-        "display_name",
+        "username",
         "firebase_picture",
         "last_login",
         "date_joined",
     )
     list_display = (
         "id",
+        "username",
         "email",
-        "name",
     )
     list_display_links = (
         "id",
+        "username",
         "email",
     )

@@ -25,12 +25,6 @@ class User(AbstractUser):
         blank=True,
         default="",
     )
-    display_name = models.CharField(
-        max_length=150,
-        null=True,
-        blank=True,
-        default="",
-    )
     firebase_picture = models.URLField(
         max_length=255,
         null=True,

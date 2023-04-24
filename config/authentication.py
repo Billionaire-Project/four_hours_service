@@ -73,35 +73,44 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
             uid = decoded_token.get("uid")
             email = decoded_token.get("email")
             name = decoded_token.get("name") or ""
-            display_name = email.split("@").pop(0)
+            username = email.split("@").pop(0)
             picture = decoded_token.get("picture")
             now = timezone.now()
-
-            print(f"debug--- decoded_token: {decoded_token}")
 
         except Exception:
             raise FirebaseError()
 
-        user, created = User.objects.get_or_create(
-            uid=uid,
-            defaults={
-                "display_name": display_name,
-                "email": email,
-                "name": name,
-                "date_joined": now,
-                "firebase_picture": picture,
-            },
-        )
+        try:
+            user = User.objects.get(uid=uid)
+        except User.DoesNotExist:
+            # if user is not exist, create user
+            username_check = User.objects.filter(username=username).exists()
+            # 만약 username이 존재한다면, username에 1씩 증가하는 숫자를 붙여준다.
+            if username_check:
+                num = User.objects.filter(username__startswith=username).count() + 1
+                username = f"{username}_{num}"
 
-        if created:
+            user = User.objects.create(
+                uid=uid,
+                username=username,
+                email=email,
+                name=name,
+                date_joined=now,
+                firebase_picture=picture,
+            )
+            # 가입시 영수증 발행
             PostReceipt.objects.create(user=user)
 
         user.last_login = now
         user.save()
 
         # session
-        login_time = timezone.datetime.fromtimestamp(decoded_token["auth_time"])
-        expired_time = timezone.datetime.fromtimestamp(decoded_token["exp"])
+        login_time = timezone.datetime.fromtimestamp(
+            decoded_token["auth_time"]
+        ).astimezone()
+        expired_time = timezone.datetime.fromtimestamp(
+            decoded_token["exp"]
+        ).astimezone()
 
         user_session, _ = UserSession.objects.get_or_create(
             user=user,
