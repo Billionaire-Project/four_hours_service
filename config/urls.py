@@ -5,6 +5,8 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
 
+from scheduler import cron_jobs
+
 urlpatterns = [
     path("admin/", admin.site.urls),
 ]
@@ -46,3 +48,6 @@ urlpatterns += [
     path("api/v1/users/", include("apps.users.urls")),
     path("api/v1/posts/", include("apps.posts.urls")),
 ]
+
+# scheduler
+cron_jobs()

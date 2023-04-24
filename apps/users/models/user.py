@@ -25,21 +25,11 @@ class User(AbstractUser):
         blank=True,
         default="",
     )
-    # username의 중복을 허용하기 위해
-    username = models.CharField(
+    display_name = models.CharField(
         max_length=150,
-        unique=False,
         null=True,
         blank=True,
         default="",
-    )
-    # email을 unique하게 지정 후
-    email = models.EmailField(
-        verbose_name="email",
-        max_length=255,
-        unique=True,
-        null=False,
-        blank=False,
     )
     firebase_picture = models.URLField(
         max_length=255,
@@ -47,9 +37,6 @@ class User(AbstractUser):
         blank=True,
         default="",
     )
-    # 유저를 식별하는 필드를 email로 변경
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
 
     first_name = None
     last_name = None
@@ -58,3 +45,6 @@ class User(AbstractUser):
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True)
     # deleted_reason
+
+    def __str__(self):
+        return self.email

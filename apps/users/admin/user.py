@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User
+from apps.users.models import User
 
 
 @admin.register(User)
@@ -12,8 +12,9 @@ class CustomUserAdmin(UserAdmin):
             {
                 "fields": (
                     # "id", 왜 id가 안나오지?
-                    "username",
+                    "email",
                     "name",
+                    "display_name",
                     "firebase_picture",
                 ),
             },
@@ -43,16 +44,17 @@ class CustomUserAdmin(UserAdmin):
         ),
     )
     readonly_fields = (
+        "display_name",
         "firebase_picture",
         "last_login",
         "date_joined",
     )
     list_display = (
         "id",
-        "username",
+        "email",
         "name",
     )
     list_display_links = (
         "id",
-        "username",
+        "email",
     )

@@ -7,7 +7,7 @@ class MeSerializer(ModelSerializer):
         model = User
         fields = (
             "id",
-            "username",
+            "display_name",
             "name",
             "email",
         )

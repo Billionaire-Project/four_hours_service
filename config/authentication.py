@@ -3,6 +3,7 @@ import os
 from django.utils import timezone
 
 from apps.users.models import User, UserSession
+from apps.posts.models import PostReceipt
 from firebase_admin import auth
 from firebase_admin import credentials
 from firebase_admin import initialize_app
@@ -72,7 +73,7 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
             uid = decoded_token.get("uid")
             email = decoded_token.get("email")
             name = decoded_token.get("name") or ""
-            username = email.split("@").pop(0)
+            display_name = email.split("@").pop(0)
             picture = decoded_token.get("picture")
             now = timezone.now()
 
@@ -81,16 +82,19 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
         except Exception:
             raise FirebaseError()
 
-        user, _ = User.objects.get_or_create(
+        user, created = User.objects.get_or_create(
             uid=uid,
             defaults={
-                "username": username,
+                "display_name": display_name,
                 "email": email,
                 "name": name,
                 "date_joined": now,
                 "firebase_picture": picture,
             },
         )
+
+        if created:
+            PostReceipt.objects.create(user=user)
 
         user.last_login = now
         user.save()
