@@ -5,6 +5,9 @@ from apps.users.models import User
 
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
+    def has_add_permission(self, request, obj=None):
+        return False
+
     fieldsets = (
         (
             # admin에서 section을 나눌 수 있음
@@ -58,4 +61,8 @@ class CustomUserAdmin(UserAdmin):
         "id",
         "username",
         "email",
+    )
+    search_fields = (
+        "username",
+        "name",
     )

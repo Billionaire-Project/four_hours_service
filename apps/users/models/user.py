@@ -41,4 +41,4 @@ class User(AbstractUser):
     # deleted_reason
 
     def __str__(self):
-        return self.email
+        return f"{self.id}_{self.username}"

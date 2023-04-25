@@ -7,6 +7,9 @@ from apps.posts.models import PostReceipt
 class PostReceiptAdmin(admin.ModelAdmin):
     """PostReceipt Admin Definition"""
 
+    def has_add_permission(self, request, obj=None):
+        return False
+
     fieldsets = (
         (
             "PostReceipt",

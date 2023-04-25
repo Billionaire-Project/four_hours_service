@@ -4,6 +4,9 @@ from apps.users.models import UserSession
 
 @admin.register(UserSession)
 class UserSessionAdmin(admin.ModelAdmin):
+    def has_add_permission(self, request, obj=None):
+        return False
+
     fieldsets = (
         (
             "Profile",
