@@ -12,6 +12,7 @@ class User(AbstractUser):
     class Meta:
         default_related_name = "users"
 
+    id = models.AutoField(primary_key=True)
     # firebase auth uuid
     uid = models.CharField(
         max_length=150,

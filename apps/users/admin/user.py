@@ -8,13 +8,14 @@ class CustomUserAdmin(UserAdmin):
     def has_add_permission(self, request, obj=None):
         return False
 
+    form = UserAdmin.form
     fieldsets = (
         (
             # admin에서 section을 나눌 수 있음
             "Profile",
             {
                 "fields": (
-                    # "id", 왜 id가 안나오지?
+                    # "id",
                     "name",
                     "username",
                     "email",

@@ -22,6 +22,7 @@ class PostReceipt(CommonModel):
     class Meta:
         default_related_name = "post_receipts"
 
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)
     post = models.ForeignKey(
         "posts.Post",

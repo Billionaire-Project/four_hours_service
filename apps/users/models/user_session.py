@@ -41,6 +41,7 @@ class UserSession(CommonModel):
     class Meta:
         default_related_name = "user_sessions"
 
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)
     login_time = models.DateTimeField(null=True, blank=True)  # auth_time
     logout_time = models.DateTimeField(null=True, blank=True)  # logout 시간

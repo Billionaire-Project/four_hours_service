@@ -4,6 +4,8 @@ from apps.commons.models.common_model import CommonModel
 
 class PostDeleteReason(CommonModel):
     """PostDeleteReason Model Definition"""
+
+    id = models.AutoField(primary_key=True)
     reason = models.CharField(max_length=140)
     is_public = models.BooleanField(default=False)
 

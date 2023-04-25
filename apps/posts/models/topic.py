@@ -15,6 +15,7 @@ class Topic(CommonModel):
     class Meta:
         default_related_name = "topics"
 
+    id = models.AutoField(primary_key=True)
     topic = models.CharField(max_length=100)
 
     # 해당 토픽이 사용된 적 있는지

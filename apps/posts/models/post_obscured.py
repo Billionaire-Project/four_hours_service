@@ -12,6 +12,7 @@ class PostObscured(CommonModel):
     class Meta:
         default_related_name = "post_obscureds"
 
+    id = models.AutoField(primary_key=True)
     # 왜 null=True 인지는 모르겠음
     user = models.ForeignKey("users.User", on_delete=models.CASCADE, null=True)
     post = models.ForeignKey("posts.Post", on_delete=models.CASCADE, null=True)
