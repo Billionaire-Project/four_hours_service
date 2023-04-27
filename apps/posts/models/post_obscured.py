@@ -18,6 +18,11 @@ class PostObscured(CommonModel):
     post = models.ForeignKey("posts.Post", on_delete=models.CASCADE, null=True)
     obscured_content = models.TextField(default="")
 
+    # gpt feature
+    time_taken = models.FloatField(null=True, blank=True)
+    total_token = models.IntegerField(null=True, blank=True)
+    is_failed = models.BooleanField(default=False)
+
     # delete option
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True)

@@ -4,6 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 
+from firebase_admin import auth
+
 from drf_yasg.utils import swagger_auto_schema
 
 
@@ -19,16 +21,28 @@ class Logout(APIView):
         operation_description="""
         ## 로그아웃 시 요청하는 api
         - firebase auth logout과 별개로 로그아웃 할때 요청해주세요
+        - 사용자의 리프레시 토큰은 만료됩니다.
         """,
         responses={
             200: "HTTP_200_OK",
         },
     )
     def put(self, request):
-        session = UserSession.objects.get(user=request.user)
+        # 토큰 만료
+        auth_header = request.META.get("HTTP_AUTHORIZATION")
+        print("debug--- auth_header", auth_header)
+        id_token = auth_header.split(" ").pop()
+        print("debug--- id_token", id_token)
+        decoded_token = auth.verify_id_token(id_token)
+        print("debug--- decoded_token", decoded_token)
+        uid = decoded_token.get("uid")
+        print("debug--- uid", uid)
+        auth.revoke_refresh_tokens(uid)
 
-        session.logout_time = timezone.now()
-        session.is_expired = True
-        session.save()
+        # session = UserSession.objects.get(user=request.user)
+
+        # session.logout_time = timezone.now()
+        # session.is_expired = True
+        # session.save()
 
         return Response(status=HTTP_200_OK)
