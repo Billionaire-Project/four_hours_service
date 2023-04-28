@@ -25,8 +25,10 @@ class Test(APIView):
         # print("debug--- decoded_token", decoded_token)
         # uid = decoded_token.get("uid")
         # print("debug--- uid", uid)
-        user = User.objects.get(id=7)
-        sessions = UserSession.objects.filter(user=user)
+        sessions = UserSession.objects.all()
+
+        print("debug--- sessions", sessions)
+        print("debug--- sessions", sessions.last())
 
         # for session in sessions:
         #     if not session.is_expired:
@@ -38,23 +40,6 @@ class Test(APIView):
         # print("debug--- session", sessions[0].is_expired)
 
         # last element of sessions
-
-        session, created = UserSession.objects.get_or_create(
-            id=33,
-            user=user,
-            defaults={
-                "is_expired": False,
-            },
-        )
-
-        if not created:
-            session.logout_time = timezone.now()
-            session.is_expired = True
-            session.save()
-
-        print("debug--- session", session)
-        print("debug--- created", created)
-        print("debug--- session", session.is_expired)
 
         return Response(status=HTTP_200_OK)
 

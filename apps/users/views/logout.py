@@ -35,10 +35,11 @@ class Logout(APIView):
         uid = decoded_token.get("uid")
         auth.revoke_refresh_tokens(uid)
 
-        sessions = UserSession.objects.filter(user=request.user)
-        for session in sessions:
-            if not session.logged_out_at:
-                session.logged_out_at = timezone.now()
-                session.save()
+        sessions = UserSession.objects.filter(
+            user=request.user, logged_out_at__isnull=True
+        )
+        session = sessions.last()
+        session.logged_out_at = timezone.now()
+        session.save()
 
         return Response(status=HTTP_200_OK)

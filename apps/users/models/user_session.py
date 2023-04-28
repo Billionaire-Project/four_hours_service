@@ -7,6 +7,9 @@ class UserSession(CommonModel):
     UserSession Model Definition
     - 세션이라고 하지만, 토큰관리에 가깝다.
     - firebase auth token의 시간 관리
+    - 세션을 완전히 관리할 수는 없어서, 한시간 마다 만료되는 expired_at을 만들어서 관리함.
+    - 하나의 토큰이 만료되기 전에 들어오는 세션은 count로 센다.
+    - 만료된 후 새로운 토큰을 발급받으면 session row를 새로 만든다.
     """
 
     class Meta:
@@ -19,8 +22,8 @@ class UserSession(CommonModel):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)
 
-    issued_at = models.DateTimeField(auto_now_add=True)  # iat
-    accessed_at = models.DateTimeField(auto_now_add=True, null=True)  # iat
+    issued_at = models.DateTimeField(null=True, default=None)
+    accessed_at = models.DateTimeField(auto_now_add=True, null=True)
     logged_out_at = models.DateTimeField(null=True, default=None)  # logout 시간
     expired_at = models.DateTimeField(null=True, blank=True)  # exp
 
@@ -29,6 +32,8 @@ class UserSession(CommonModel):
         choices=SocialKindChoices.choices,
     )
     count = models.PositiveBigIntegerField(default=0)
+
+    auth_time = models.DateTimeField(null=True, default=None)
 
 
 """
