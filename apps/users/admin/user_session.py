@@ -13,28 +13,32 @@ class UserSessionAdmin(admin.ModelAdmin):
             {
                 "fields": (
                     "user",
-                    "login_time",
-                    "logout_time",
-                    "session_expire_time",
-                    "is_expired",
+                    "issued_at",
+                    "accessed_at",
+                    "logged_out_at",
+                    "expired_at",
+                    "social",
+                    "count",
                 ),
             },
         ),
     )
     readonly_fields = (
         "user",
-        "login_time",
-        "logout_time",
-        "session_expire_time",
-        "is_expired",
+        "issued_at",
+        "accessed_at",
+        "logged_out_at",
+        "expired_at",
+        "social",
+        "count",
     )
     list_display = (
         "id",
         "user",
-        "login_time",
-        "logout_time",
-        "session_expire_time",
-        "is_expired",
+        "issued_at",
+        "accessed_at",
+        "logged_out_at",
+        "count",
     )
     list_display_links = (
         "id",

@@ -30,19 +30,15 @@ class Logout(APIView):
     def put(self, request):
         # 토큰 만료
         auth_header = request.META.get("HTTP_AUTHORIZATION")
-        print("debug--- auth_header", auth_header)
         id_token = auth_header.split(" ").pop()
-        print("debug--- id_token", id_token)
         decoded_token = auth.verify_id_token(id_token)
-        print("debug--- decoded_token", decoded_token)
         uid = decoded_token.get("uid")
-        print("debug--- uid", uid)
         auth.revoke_refresh_tokens(uid)
 
-        # session = UserSession.objects.get(user=request.user)
-
-        # session.logout_time = timezone.now()
-        # session.is_expired = True
-        # session.save()
+        sessions = UserSession.objects.filter(user=request.user)
+        for session in sessions:
+            if not session.logged_out_at:
+                session.logged_out_at = timezone.now()
+                session.save()
 
         return Response(status=HTTP_200_OK)

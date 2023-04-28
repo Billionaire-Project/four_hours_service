@@ -75,6 +75,7 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
             name = decoded_token.get("name") or ""
             username = email.split("@").pop(0)
             picture = decoded_token.get("picture")
+            social = decoded_token.get("firebase").get("sign_in_provider").split(".")[0]
             now = timezone.now()
 
         except Exception:
@@ -104,22 +105,23 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
         user.last_login = now
         user.save()
 
-        # session
-        login_time = timezone.datetime.fromtimestamp(
-            decoded_token["auth_time"]
-        ).astimezone()
-        expired_time = timezone.datetime.fromtimestamp(
-            decoded_token["exp"]
-        ).astimezone()
+        # token
+        issued_at = timezone.datetime.fromtimestamp(decoded_token["iat"]).astimezone()
+        expired_at = timezone.datetime.fromtimestamp(decoded_token["exp"]).astimezone()
 
-        user_session, _ = UserSession.objects.get_or_create(
+        user_session, created = UserSession.objects.get_or_create(
             user=user,
-            login_time=login_time,
+            expired_at=expired_at,
             defaults={
-                "logout_time": None,
-                "session_expire_time": expired_time,
-                "is_expired": False,
+                "logged_out_at": None,
+                "issued_at": issued_at,
+                "social": social,
             },
         )
+
+        if not created:
+            user_session.accessed_at = now
+            user_session.count += 1
+            user_session.save()
 
         return (user, None)
