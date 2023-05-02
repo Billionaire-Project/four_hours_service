@@ -36,21 +36,14 @@ class Posts(APIView):
         },
     )
     def get(self, request, format=None):
-        posts = pagination.get(request, Post)
+        queryset = Post.objects.filter(is_deleted=False).order_by("-created_at")
+        posts = pagination.get(request, queryset)
 
         serializer = PostGetSerializer(
             posts,
             many=True,
             context={"request": request},
         )
-        # return Response(
-        #     {
-        #         "start_from": start,
-        #         "offset": offset,
-        #         "posts": serializer.data,
-        #         "status": status.HTTP_200_OK,
-        #     }
-        # )
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(

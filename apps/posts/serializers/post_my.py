@@ -8,7 +8,6 @@ class PostMySerializer(serializers.ModelSerializer):
         model = Post
         fields = (
             "id",
-            "user",
             "content",
             "created_at",
             "updated_at",

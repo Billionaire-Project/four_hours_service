@@ -34,6 +34,7 @@ class PostAdmin(admin.ModelAdmin):
         "id",
         "__str__",
         "user",
+        "is_deleted",
     )
     list_display_links = (
         "id",

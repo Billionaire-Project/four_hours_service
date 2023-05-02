@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from rest_framework import status
 from rest_framework import exceptions
 from rest_framework.views import APIView
@@ -32,3 +34,13 @@ class PostId(APIView):
         post = self.get_object(pk)
         serializer = PostGetSerializer(post, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_description="post를 삭제합니다. (soft delete)",
+    )
+    def delete(self, request, pk, format=None):
+        post = self.get_object(pk)
+        post.is_deleted = True
+        post.deleted_at = timezone.now()
+        post.save()
+        return Response(status=status.HTTP_200_OK)

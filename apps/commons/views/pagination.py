@@ -22,8 +22,7 @@ class Pagination:
             ),
         ]
 
-    def get(self, request, model):
-        queryset = model.objects.all().order_by("-created_at")
+    def get(self, request, queryset):
         start = int(request.query_params.get("start") or self.start)
         offset = int(request.query_params.get("offset") or self.offset)
         result = queryset[start : start + offset]

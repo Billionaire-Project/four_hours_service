@@ -1,11 +1,12 @@
 from rest_framework import serializers
 
-from apps.posts.models import Post, PostLike
+from apps.posts.models import Post, PostLike, PostReport
 
 
 class PostGetSerializer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
     is_liked = serializers.SerializerMethodField()
+    is_reported = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
@@ -17,6 +18,7 @@ class PostGetSerializer(serializers.ModelSerializer):
             "updated_at",
             "is_owner",
             "is_liked",
+            "is_reported",
         )
 
     def get_is_owner(self, obj) -> bool:
@@ -30,6 +32,14 @@ class PostGetSerializer(serializers.ModelSerializer):
                 post=obj.id,
             ).exists()
         return False
+
+    def get_is_reported(self, obj) -> bool:
+        request = self.context.get("request")
+        if request.user.is_authenticated:
+            return PostReport.objects.filter(
+                user=request.user,
+                post=obj.id,
+            ).exists()
 
 
 class PostPostSerializer(serializers.ModelSerializer):

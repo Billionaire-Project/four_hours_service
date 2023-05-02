@@ -45,7 +45,8 @@ class Test(APIView):
         },
     )
     def get(self, request):
-        posts = page.get(request, Post)
+        queryset = Post.objects.all().order_by("-created_at")
+        posts = page.get(request, queryset)
         serializer = PostGetSerializer(
             posts,
             many=True,
