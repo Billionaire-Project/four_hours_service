@@ -30,7 +30,7 @@ class PostObscuredAdmin(admin.ModelAdmin):
                     "total_token",
                     "is_failed",
                 ),
-                "classes": ("collapse",),
+                # "classes": ("collapse",),
             },
         ),
         (
@@ -44,7 +44,14 @@ class PostObscuredAdmin(admin.ModelAdmin):
             },
         ),
     )
-
+    readonly_fields = (
+        "user",
+        "post",
+        "obscured_content",
+        "time_taken",
+        "total_token",
+        "is_failed",
+    )
     list_display = (
         "id",
         "__str__",

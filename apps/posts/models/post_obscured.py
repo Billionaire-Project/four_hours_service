@@ -16,6 +16,7 @@ class PostObscured(CommonModel):
     # 왜 null=True 인지는 모르겠음
     user = models.ForeignKey("users.User", on_delete=models.CASCADE, null=True)
     post = models.ForeignKey("posts.Post", on_delete=models.CASCADE, null=True)
+    obscured_words = models.TextField(default="")
     obscured_content = models.TextField(default="")
 
     # gpt feature
