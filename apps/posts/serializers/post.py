@@ -7,6 +7,7 @@ class PostGetSerializer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
     is_liked = serializers.SerializerMethodField()
     is_reported = serializers.SerializerMethodField()
+    # user = serializers.SerializerMethodField() # 나중에 유저 상세정보가 필요하다면 추가하자
 
     class Meta:
         model = Post
@@ -40,6 +41,13 @@ class PostGetSerializer(serializers.ModelSerializer):
                 user=request.user,
                 post=obj.id,
             ).exists()
+
+    # def get_user(self, obj):
+    #     return {
+    #         "id": obj.user.id,
+    #         "name": obj.user.name,
+    #         "username": obj.user.username,
+    #     }
 
 
 class PostPostSerializer(serializers.ModelSerializer):

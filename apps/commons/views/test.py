@@ -46,15 +46,13 @@ class Test(APIView):
     )
     def get(self, request):
         queryset = Post.objects.all().order_by("-created_at")
-        posts = page.get(request, queryset)
+        result = page.get(request, queryset)
         serializer = PostGetSerializer(
-            posts,
+            result.pop("result"),
             many=True,
             context={"request": request},
         )
 
-        return Response(
-            {
-                "poat": serializer.data,
-            }
-        )
+        result["posts"] = serializer.data
+
+        return Response(result)

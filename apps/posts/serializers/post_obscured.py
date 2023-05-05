@@ -8,7 +8,5 @@ class PostObscuredSerializer(serializers.ModelSerializer):
         model = PostObscured
         fields = (
             "id",
-            "user",
-            "post",
             "obscured_content",
         )

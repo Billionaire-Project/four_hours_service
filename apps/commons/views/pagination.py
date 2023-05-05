@@ -27,7 +27,16 @@ class Pagination:
         offset = int(request.query_params.get("offset") or self.offset)
         result = queryset[start : start + offset]
 
-        if len(result) < 0:
-            return None
+        if queryset[start + offset : start + offset + 1].exists():
+            _next = start + offset
+        else:
+            _next = None
 
-        return result
+        resp = {
+            "start": start,
+            "offset": offset,
+            "next": _next,
+            "result": result,
+        }
+
+        return resp
