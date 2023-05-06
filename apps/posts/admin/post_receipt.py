@@ -15,18 +15,24 @@ class PostReceiptAdmin(admin.ModelAdmin):
             "PostReceipt",
             {
                 "fields": (
-                    # "id",
-                    "post",
                     "user",
-                    "is_valid",
-                    "shared_post_available_at",
-                    "next_post_available_at",
-                    "post_delete_stack",
+                    "post",
+                    "is_postable",
+                    "is_readable",
+                    "readable_ended_at",
+                    "postable_at",
                 ),
             },
         ),
     )
-
+    readonly_fields = (
+        "user",
+        "post",
+        "is_postable",
+        "is_readable",
+        "readable_ended_at",
+        "postable_at",
+    )
     list_display = (
         "id",
         "__str__",

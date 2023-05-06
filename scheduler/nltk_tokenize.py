@@ -6,6 +6,7 @@ nltk.download("punkt")
 
 def count_meaningful_words(sentence):
     words = word_tokenize(sentence)
+    print("debug--- words : ", words)
     return len(words)
 
 

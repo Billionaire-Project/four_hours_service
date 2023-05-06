@@ -31,14 +31,17 @@ class PostReceipt(CommonModel):
         blank=True,
     )
 
-    # 해당 영수증 유효여부 및 만료여부 체크
-    is_valid = models.BooleanField(default=True)
+    # 해당 영수증으로 글 작성 가능 여부
+    is_postable = models.BooleanField(default=True)
+
+    # 해당 영수증으로 글 열람 가능 여부
+    is_readable = models.BooleanField(default=False)
 
     # shared post 열람권한 , 24시간
-    shared_post_available_at = models.DateTimeField(null=True, blank=True)
+    readable_ended_at = models.DateTimeField(null=True, blank=True)
 
     # 다음 글 작성 가능 시간 , 4 시간
-    next_post_available_at = models.DateTimeField(null=True, blank=True)
+    postable_at = models.DateTimeField(null=True, blank=True)
 
     # post delete stack
     post_delete_stack = models.IntegerField(default=0)

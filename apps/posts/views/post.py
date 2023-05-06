@@ -47,7 +47,7 @@ class Posts(APIView):
 
         result["posts"] = serializer.data
 
-        return Response(result)
+        return Response(result, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
         operation_description="post를 작성합니다.",

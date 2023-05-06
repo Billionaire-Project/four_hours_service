@@ -34,9 +34,8 @@ def gpt_obscure() -> None:
             is_deleted=False,
         )
 
+        print("debug--- gpt_obscure start")
         for post in posts:
-            print("debug--- gpt_obscure start")
-
             post_obscured = PostObscured()
             post_obscured.user = post.user
             post_obscured.post = post
@@ -46,13 +45,15 @@ def gpt_obscure() -> None:
             if count_meaningful_words(post.content) >= 5:
                 start = time.time()
                 sentence = post.content
+                print("debug--- sentence : ", sentence)
                 completion = openai.ChatCompletion.create(
                     model="gpt-3.5-turbo",
                     # model="gpt-4",
                     messages=[
                         {
                             "role": "user",
-                            "content": "다음 문장의 핵심 단어만 출력해줘, 불가능하다면 false만 출력해줘",
+                            "content": "다음 문장의 핵심 단어만 출력해줘",
+                            # "content": "다음 문장의 핵심 단어만 출력해줘, 불가능하다면 false만 출력해줘",
                             # 이 조건으로 출력이 항상 같지 않음, 세밀한 조정이 필요할듯
                         },
                         {"role": "user", "content": sentence},

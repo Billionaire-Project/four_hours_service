@@ -29,4 +29,4 @@ def cron_jobs():
     sched.add_job(gpt_obscure, "interval", seconds=1, id="gpt_obscure")
     # sched.add_job(test, "interval", seconds=1, id="test")
     # async_sched.start()
-    pass
+    # pass
