@@ -31,6 +31,7 @@ class PostId(APIView):
         },
     )
     def get(self, request, pk, format=None):
+        # 여기에 is_delete가 true인애 면 404
         post = self.get_object(pk)
         serializer = PostGetSerializer(post, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)

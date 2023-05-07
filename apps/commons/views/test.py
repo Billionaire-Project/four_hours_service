@@ -8,6 +8,7 @@ from drf_yasg import openapi
 from django.utils import timezone
 from firebase_admin import auth
 from apps.commons.views.pagination import Pagination
+from apps.posts.serializers.post_my import PostMySerializer
 from apps.posts.serializers.post_receipt import PostReceiptSerializer
 
 from apps.users.models import User
@@ -17,7 +18,7 @@ from apps.posts.models import Post, PostReceipt
 from apps.posts.serializers import PostGetSerializer, PostPostSerializer
 
 
-# Pagination = Pagination(0, 10)
+pagination = Pagination(0, 10)
 
 
 class Test(APIView):
@@ -46,19 +47,30 @@ class Test(APIView):
         },
     )
     def get(self, request):
-        # 여기서는 단순 확인기능만
-        post_receipt = PostReceipt.objects.get(user_id=request.user.id)
-        serializer = PostReceiptSerializer(post_receipt)
+        queryset = Post.objects.filter(is_deleted=False, user=request.user).order_by(
+            "-created_at"
+        )
+        result = pagination.get(request, queryset)
+        serializer = PostMySerializer(
+            result.pop("result"),
+            many=True,
+        )
+        # serializer.data의 인자를 날짜별로 묶어서 반환
+        posts_by_date = {}
+        for post in serializer.data:
+            if post["created_at"][:10] not in posts_by_date:
+                posts_by_date[post["created_at"][:10]] = [post]
+            else:
+                posts_by_date[post["created_at"][:10]].append(post)
 
-        return Response(serializer.data)
-        # queryset = Post.objects.all().order_by("-created_at")
-        # result = page.get(request, queryset)
-        # serializer = PostGetSerializer(
-        #     result.pop("result"),
-        #     many=True,
-        #     context={"request": request},
-        # )
+        result["posts"] = posts_by_date
 
-        # result["posts"] = serializer.data
+        print(request.user.post_reports.all())
 
-        # return Response(result, status=status.HTTP_201_CREATED)
+        return Response(result)
+
+        # 여기서는 단순 확인기능만, PostReceipt 관련 테스트
+        # post_receipt = PostReceipt.objects.get(user_id=request.user.id)
+        # serializer = PostReceiptSerializer(post_receipt)
+
+        # return Response(serializer.data)

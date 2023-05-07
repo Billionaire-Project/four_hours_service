@@ -30,6 +30,8 @@ class Posts(APIView):
         ```
         - 다음 요청시에는 next값을 start로 요청해주세요!
         - next가 null이면 더이상 요청할 데이터가 없습니다.
+        - 삭제되거나 해당유저에게 신고된 글을 제외하고 반환합니다.
+        - count_meaningful_words (token)이 5개 이상이라면 핵심단어를 추출 후 obscured
         """,
         manual_parameters=pagination.get_params,
         responses={
@@ -37,7 +39,10 @@ class Posts(APIView):
         },
     )
     def get(self, request):
-        queryset = Post.objects.filter(is_deleted=False).order_by("-created_at")
+        queryset = Post.objects.filter(is_deleted=False)
+        queryset = queryset.exclude(post_reports__user_id=request.user.id)
+        queryset = queryset.order_by("-created_at")
+
         result = pagination.get(request, queryset)
         serializer = PostGetSerializer(
             result.pop("result"),

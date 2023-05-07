@@ -10,6 +10,8 @@ from apps.posts.serializers import PostReceiptSerializer
 
 
 class PostReceiptCheck(APIView):
+    permission_classes = [IsAuthenticated]
+
     """
     # PostReceipt 확인용
     """
@@ -25,4 +27,4 @@ class PostReceiptCheck(APIView):
     def get(self, request):
         post_receipt = PostReceipt.objects.get(user_id=request.user.id)
         serializer = PostReceiptSerializer(post_receipt)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)

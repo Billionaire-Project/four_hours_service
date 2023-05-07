@@ -45,4 +45,4 @@ class PostsObscured(APIView):
 
         result["posts"] = serializer.data
 
-        return Response(result)
+        return Response(result, status=status.HTTP_200_OK)

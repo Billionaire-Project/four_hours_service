@@ -5,6 +5,9 @@ from apps.commons.models.common_model import CommonModel
 class PostLike(CommonModel):
     """PostLike Model Definition"""
 
+    class Meta:
+        default_related_name = "post_likes"
+
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)
     post = models.ForeignKey("posts.Post", on_delete=models.CASCADE)

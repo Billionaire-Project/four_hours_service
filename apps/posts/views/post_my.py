@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 from drf_yasg.utils import swagger_auto_schema
 
@@ -13,6 +14,8 @@ pagination = Pagination(0, 10)
 
 
 class PostMy(APIView):
+    permission_classes = [IsAuthenticated]
+
     @swagger_auto_schema(
         operation_description="""
         내가 작성한 post를 가져옵니다.
@@ -22,11 +25,22 @@ class PostMy(APIView):
             "start": 0,
             "offset": 10,
             "next": 10,
-            "posts": [...],
+            "posts": [
+                {
+                    "2023-05-06": [
+                        {
+                            "id": 53,
+                            "content": "~~~",
+                            "created_at": "2023-05-06T16:47:57.651504+09:00",
+                            "updated_at": "2023-05-06T16:48:01.421320+09:00"
+                        },
+                        ....
+                },
         }
         ```
         - 다음 요청시에는 next값을 start로 요청해주세요!
         - next가 null이면 더이상 요청할 데이터가 없습니다.
+        - 날짜별로 쓴 글이 정렬되어 내려갑니다.
         """,
         manual_parameters=pagination.get_params,
         responses={
@@ -34,6 +48,16 @@ class PostMy(APIView):
         },
     )
     def get(self, request, format=None):
+        # queryset = Post.objects.filter(is_deleted=False, user=request.user).order_by(
+        #     "-created_at"
+        # )
+        # result = pagination.get(request, queryset)
+        # serializer = PostMySerializer(
+        #     result.pop("result"),
+        #     many=True,
+        # )
+        # result["posts"] = serializer.data
+        # return Response(result, status=status.HTTP_200_OK)
         queryset = Post.objects.filter(is_deleted=False, user=request.user).order_by(
             "-created_at"
         )
@@ -42,5 +66,13 @@ class PostMy(APIView):
             result.pop("result"),
             many=True,
         )
-        result["posts"] = serializer.data
+        # serializer.data의 인자를 날짜별로 묶어서 반환
+        posts_by_date = {}
+        for post in serializer.data:
+            if post["created_at"][:10] not in posts_by_date:
+                posts_by_date[post["created_at"][:10]] = [post]
+            else:
+                posts_by_date[post["created_at"][:10]].append(post)
+
+        result["posts"] = posts_by_date
         return Response(result)

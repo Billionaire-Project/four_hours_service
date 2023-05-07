@@ -40,6 +40,8 @@ class User(AbstractUser):
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True)
     # deleted_reason
+    # 재가입시 패널티 없고 아예 새로운 아이디로 다시 시작
+    # firebase auth에서까지 삭제
 
     def __str__(self):
         return f"{self.id}_{self.username}"
