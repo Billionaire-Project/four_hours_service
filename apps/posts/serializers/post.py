@@ -42,6 +42,12 @@ class PostGetSerializer(serializers.ModelSerializer):
                 post=obj.id,
             ).exists()
 
+    def to_representation(self, instance):
+        resp = super().to_representation(instance)
+        resp["id"] = str(resp["id"])
+
+        return resp
+
     # def get_user(self, obj):
     #     return {
     #         "id": obj.user.id,

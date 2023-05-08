@@ -65,7 +65,7 @@ class Test(APIView):
 
         result["posts"] = posts_by_date
 
-        print(request.user.post_reports.all())
+        # print(request.user.post_reports.all())
 
         return Response(result)
 

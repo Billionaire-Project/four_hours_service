@@ -28,13 +28,13 @@ class Pagination:
         result = queryset[start : start + offset]
 
         if queryset[start + offset : start + offset + 1].exists():
-            _next = start + offset
+            _next = str(start + offset)
         else:
             _next = None
 
         resp = {
-            "start": start,
-            "offset": offset,
+            "start": str(start),
+            "offset": str(offset),
             "next": _next,
             "result": result,
         }

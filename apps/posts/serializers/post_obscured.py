@@ -10,3 +10,9 @@ class PostObscuredSerializer(serializers.ModelSerializer):
             "id",
             "obscured_content",
         )
+
+    def to_representation(self, instance):
+        resp = super().to_representation(instance)
+        resp["id"] = str(resp["id"])
+
+        return resp

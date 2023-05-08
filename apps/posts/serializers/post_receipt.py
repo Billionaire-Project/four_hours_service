@@ -15,3 +15,9 @@ class PostReceiptSerializer(serializers.ModelSerializer):
             "readable_ended_at",
             "postable_at",
         )
+
+    def to_representation(self, instance):
+        resp = super().to_representation(instance)
+        resp["id"] = str(resp["id"])
+
+        return resp
