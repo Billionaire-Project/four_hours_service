@@ -26,7 +26,7 @@ class PostLikeId(APIView):
         - 해당 api를 다시 요청하면 좋아요가 취소됩니다.
         """,
     )
-    def get(self, request, pk, format=None):
+    def post(self, request, pk, format=None):
         post = self.get_object(pk)
 
         post_like, created = PostLike.objects.get_or_create(

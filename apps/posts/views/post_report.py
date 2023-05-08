@@ -28,7 +28,7 @@ class PostReportId(APIView):
         - 신고된 post는 해당 사용자에게 노출되지 않습니다.
         """,
     )
-    def get(self, request, pk, format=None):
+    def post(self, request, pk, format=None):
         post = self.get_object(pk)
 
         post_report = PostReport.objects.create(

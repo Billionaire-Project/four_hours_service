@@ -42,6 +42,7 @@ class Posts(APIView):
         queryset = Post.objects.filter(is_deleted=False)
         queryset = queryset.exclude(post_reports__user_id=request.user.id)
         queryset = queryset.order_by("-created_at")
+        ## 추후에 24시간 제한 걸기
 
         result = pagination.get(request, queryset)
         serializer = PostGetSerializer(
