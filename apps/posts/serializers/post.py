@@ -42,11 +42,11 @@ class PostGetSerializer(serializers.ModelSerializer):
                 post=obj.id,
             ).exists()
 
-    def to_representation(self, instance):
-        resp = super().to_representation(instance)
-        resp["id"] = str(resp["id"])
+    # def to_representation(self, instance):
+    #     resp = super().to_representation(instance)
+    #     resp["id"] = str(resp["id"])
 
-        return resp
+    #     return resp
 
     # def get_user(self, obj):
     #     return {

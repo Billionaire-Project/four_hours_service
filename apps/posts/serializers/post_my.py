@@ -13,8 +13,8 @@ class PostMySerializer(serializers.ModelSerializer):
             "updated_at",
         )
 
-    def to_representation(self, instance):
-        resp = super().to_representation(instance)
-        resp["id"] = str(resp["id"])
+    # def to_representation(self, instance):
+    #     resp = super().to_representation(instance)
+    #     resp["id"] = str(resp["id"])
 
-        return resp
+    #     return resp
