@@ -35,3 +35,6 @@ class Persona(CommonModel):
         choices=PersonaKindChoices.choices,
     )
     is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.content

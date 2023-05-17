@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup as bs
 from apps.resources.models import Article
 
 
-def crawling_sports_news():
+def crawling_entertain_news():
     entertain_url = "https://entertain.naver.com"
 
     entertain_url_home = entertain_url + "/home"
@@ -47,3 +47,15 @@ def crawling_sports_news():
                 "url": url,
             }
         )
+
+    if len(parsed_news) > 0:
+        for news in parsed_news:
+            if Article.objects.filter(title=news["title"]).exists():
+                continue
+            else:
+                Article.objects.create(
+                    kind=Article.ArticleKindChoices.ENTERTAINMENT,
+                    title=news["title"],
+                    content=news["content"],
+                    url=news["url"],
+                )

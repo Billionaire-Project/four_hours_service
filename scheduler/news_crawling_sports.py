@@ -15,7 +15,6 @@ def crawling_sports_news():
     soup = bs(response.text, "html.parser")
 
     ul = soup.find("ul", {"class": "today_list"})
-
     lis = ul.findAll("li")
 
     sports_news_list = []
@@ -49,6 +48,18 @@ def crawling_sports_news():
                 "url": url,
             }
         )
+
+    if len(parsed_news) > 0:
+        for news in parsed_news:
+            if Article.objects.filter(title=news["title"]).exists():
+                continue
+            else:
+                Article.objects.create(
+                    kind=Article.ArticleKindChoices.SPORTS,
+                    title=news["title"],
+                    content=news["content"],
+                    url=news["url"],
+                )
 
     # if len(parsed_news) > 0:
     #     Article.objects.bulk_create(
