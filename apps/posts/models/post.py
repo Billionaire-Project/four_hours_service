@@ -12,6 +12,7 @@ class Post(CommonModel):
     class Meta:
         default_related_name = "posts"
 
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)
     content = models.TextField()
 
@@ -27,6 +28,9 @@ class Post(CommonModel):
 
     # gpt obsured
     is_obscured = models.BooleanField(default=False)
+
+    # gpt generated
+    is_generated = models.BooleanField(default=False)
 
     def __str__(self):
         return self.content

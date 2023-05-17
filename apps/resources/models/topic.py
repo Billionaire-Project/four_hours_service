@@ -24,6 +24,8 @@ class Topic(CommonModel):
     topic_used_at = models.DateTimeField(null=True)
     # 해당 토픽을 사용할 것인지 (default: True)
     is_use = models.BooleanField(default=True)
+    # gpt에 의해 생성된 토픽인지
+    is_generated = models.BooleanField(default=False)
 
-    # def __str__(self):
-    #     return self.topic
+    def __str__(self):
+        return self.topic

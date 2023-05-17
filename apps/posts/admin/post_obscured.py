@@ -18,6 +18,7 @@ class PostObscuredAdmin(admin.ModelAdmin):
                 "fields": (
                     "user",
                     "post",
+                    "obscured_words",
                     "obscured_content",
                 ),
             },
@@ -47,6 +48,7 @@ class PostObscuredAdmin(admin.ModelAdmin):
     readonly_fields = (
         "user",
         "post",
+        "obscured_words",
         "obscured_content",
         "time_taken",
         "total_token",

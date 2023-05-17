@@ -4,5 +4,3 @@ from .post_obscured import *  # noqa
 from .post_receipt import *  # noqa
 from .post_report import *  # noqa
 from .post import *  # noqa
-
-from .topic import *  # noqa

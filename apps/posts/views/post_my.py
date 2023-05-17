@@ -1,3 +1,4 @@
+import datetime
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -25,8 +26,7 @@ class PostMy(APIView):
             "start": 0,
             "offset": 10,
             "next": 10,
-            "posts": [
-                {
+            "posts": {
                     "2023-05-06": [
                         {
                             "id": 53,
@@ -36,6 +36,7 @@ class PostMy(APIView):
                         },
                         ....
                 },
+                
         }
         ```
         - 다음 요청시에는 next값을 start로 요청해주세요!
@@ -69,10 +70,24 @@ class PostMy(APIView):
         # serializer.data의 인자를 날짜별로 묶어서 반환
         posts_by_date = {}
         for post in serializer.data:
-            if post["created_at"][:10] not in posts_by_date:
-                posts_by_date[post["created_at"][:10]] = [post]
+            if post["created_at"][:10] == str(datetime.date.today()):
+                post["created_at"] = "Today"
+            elif post["created_at"][:10] == str(
+                datetime.date.today() - datetime.timedelta(days=1)
+            ):
+                post["created_at"] = "Yesterday"
             else:
-                posts_by_date[post["created_at"][:10]].append(post)
+                post["created_at"] = post["created_at"][:10]
+
+            if post["created_at"] not in posts_by_date:
+                posts_by_date[post["created_at"]] = [post]
+            else:
+                posts_by_date[post["created_at"]].append(post)
+
+            # if post["created_at"][:10] not in posts_by_date:
+            #     posts_by_date[post["created_at"][:10]] = [post]
+            # else:
+            #     posts_by_date[post["created_at"][:10]].append(post)
 
         result["posts"] = posts_by_date
         return Response(result)
