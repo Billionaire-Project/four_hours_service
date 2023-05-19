@@ -24,3 +24,4 @@ class Article(CommonModel):
     title = models.CharField(max_length=100)
     content = models.TextField()
     url = models.URLField()
+    is_used = models.BooleanField(default=False)

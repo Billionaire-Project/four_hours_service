@@ -13,15 +13,10 @@ class PostGeneratedAdmin(admin.ModelAdmin):
             {
                 "fields": (
                     "content",
-                    "persona_job",
-                    "persona_gender",
-                    "persona_age",
-                    "persona_tone",
-                    "persona_situation",
-                    "persona_characteristic",
-                    "persona_topic",
-                    "topic",
                     "article",
+                    "persona_preset",
+                    "persona_situation",
+                    "topic",
                     "is_active",
                 ),
             },
@@ -34,7 +29,6 @@ class PostGeneratedAdmin(admin.ModelAdmin):
                     "total_token",
                     "is_failed",
                 ),
-                # "classes": ("collapse",),
             },
         ),
     )
@@ -42,24 +36,18 @@ class PostGeneratedAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "__str__",
+        "persona_preset",
     )
     list_display_links = (
         "id",
         "__str__",
+        "persona_preset",
     )
     readonly_fields = (
         "content",
-        "persona_job",
-        "persona_gender",
-        "persona_age",
-        "persona_tone",
+        "article",
+        "persona_preset",
         "persona_situation",
-        "persona_characteristic",
-        "persona_topic",
         "topic",
         "is_active",
-        "article",
-        "time_taken",
-        "total_token",
-        "is_failed",
     )
