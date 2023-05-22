@@ -52,7 +52,6 @@ class PostObscuredAdmin(admin.ModelAdmin):
         "obscured_content",
         "time_taken",
         "total_token",
-        "is_failed",
     )
     list_display = (
         "id",

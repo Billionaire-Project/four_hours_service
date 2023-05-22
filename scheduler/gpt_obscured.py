@@ -71,9 +71,14 @@ def gpt_obscure() -> None:
                     print("debug--- obscured_words : ", obscured_words)
                     obscured_content = sentence
                     for word in obscured_words:
-                        obscured_content = obscured_content.replace(
-                            word, "_" * len(word)
-                        )
+                        # gpt가 이상한 단어를 뽑아줬을 경우 예외처리
+                        if result.__contain__(word):
+                            obscured_content = obscured_content.replace(
+                                word, "_" * len(word)
+                            )
+                        else:
+                            is_failed = True
+                            break
                     print("debug--- obscured_content : ", obscured_content)
                     post_obscured.obscured_words = obscured_words
                     post_obscured.obscured_content = obscured_content

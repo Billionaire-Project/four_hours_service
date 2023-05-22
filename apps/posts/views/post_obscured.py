@@ -18,8 +18,8 @@ class PostsObscured(APIView):
 
     @swagger_auto_schema(
         operation_description="""
-        ## receipt확인 후 권한이 없는 유저에게 반환
-        - 반환은 다음과 같다
+        # receipt확인 후 권한이 없는 유저에게 반환
+        ### - 반환은 다음과 같다
         ```
         {
             "start": 0,
@@ -28,15 +28,16 @@ class PostsObscured(APIView):
             "posts": [...],
         }
         ```
-        - 다음 요청시에는 next값을 start로 요청해주세요!
+        ### - 다음 요청시에는 next값을 start로 요청해주세요!
         """,
         manual_parameters=pagination.get_params,
-        responses={
-            200: PostObscuredSerializer(many=True),
-        },
     )
     def get(self, request, format=None):
-        queryset = PostObscured.objects.filter(is_deleted=False).order_by("-created_at")
+        queryset = (
+            PostObscured.objects.filter(is_deleted=False)
+            .filter(is_failed=False)
+            .order_by("-created_at")
+        )
         result = pagination.get(request, queryset)
         serializer = PostObscuredSerializer(
             result.pop("result"),

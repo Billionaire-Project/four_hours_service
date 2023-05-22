@@ -25,22 +25,37 @@ class PostId(APIView):
             raise exceptions.NotFound
 
     @swagger_auto_schema(
-        operation_description="post를 가져옵니다.",
+        operation_description="""
+        # post를 가져옵니다.
+        ### - 요청한 포스트가 삭제되었다면 404를 반환합니다.
+        """,
         responses={
             200: PostGetSerializer(),
         },
     )
     def get(self, request, pk, format=None):
-        # 여기에 is_delete가 true인애 면 404
         post = self.get_object(pk)
-        serializer = PostGetSerializer(post, context={"request": request})
+        if post.is_deleted:
+            raise exceptions.NotFound
+
+        serializer = PostGetSerializer(
+            post,
+            context={"request": request},
+        )
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
-        operation_description="post를 삭제합니다. (soft delete)",
+        operation_description="""
+        # post를 삭제합니다.
+        ## soft delete
+        ### - 요청한 포스트가 삭제되었다면 404를 반환합니다.
+        """,
     )
     def delete(self, request, pk, format=None):
         post = self.get_object(pk)
+        if post.is_deleted:
+            raise exceptions.NotFound
         post.is_deleted = True
         post.deleted_at = timezone.now()
         post.save()

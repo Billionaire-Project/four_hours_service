@@ -18,8 +18,8 @@ class Posts(APIView):
 
     @swagger_auto_schema(
         operation_description="""
-        ## receipt확인 후 권한이 있는 유저에게 반환
-        - 반환은 다음과 같다
+        # receipt확인 후 권한이 있는 유저에게 반환
+        ### - 반환은 다음과 같다
         ```
         {
             "start": 0,
@@ -28,15 +28,12 @@ class Posts(APIView):
             "posts": [...],
         }
         ```
-        - 다음 요청시에는 next값을 start로 요청해주세요!
-        - next가 null이면 더이상 요청할 데이터가 없습니다.
-        - 삭제되거나 해당유저에게 신고된 글을 제외하고 반환합니다.
-        - count_meaningful_words (token)이 5개 이상이라면 핵심단어를 추출 후 obscured
+        ### - 다음 요청시에는 next값을 start로 요청해주세요!
+        ### - next가 null이면 더이상 요청할 데이터가 없습니다.
+        ### - 삭제되거나 해당유저에게 신고된 글을 제외하고 반환합니다.
+        ### - count_meaningful_words (token)이 5개 이상이라면 핵심단어를 추출 후 obscured
         """,
         manual_parameters=pagination.get_params,
-        responses={
-            200: PostGetSerializer(many=True),
-        },
     )
     def get(self, request):
         queryset = Post.objects.filter(is_deleted=False)
@@ -56,7 +53,9 @@ class Posts(APIView):
         return Response(result, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
-        operation_description="post를 작성합니다.",
+        operation_description="""
+        # post를 작성합니다.
+        """,
         request_body=PostPostSerializer,
         responses={
             200: PostPostSerializer(),

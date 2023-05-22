@@ -21,13 +21,16 @@ class PostLikeId(APIView):
 
     @swagger_auto_schema(
         operation_description="""
-        ## post를 좋아요합니다.
-        - post_id를 path parameter로 받습니다.
-        - 해당 api를 다시 요청하면 좋아요가 취소됩니다.
+        # post를 좋아요합니다.
+        ### - post_id를 path parameter로 받습니다.
+        ### - 해당 api를 다시 요청하면 좋아요가 취소됩니다.
+        ### - 요청한 포스트가 삭제되었다면 404를 반환합니다.
         """,
     )
     def post(self, request, pk, format=None):
         post = self.get_object(pk)
+        if post.is_deleted:
+            raise exceptions.NotFound
 
         post_like, created = PostLike.objects.get_or_create(
             user=request.user,
