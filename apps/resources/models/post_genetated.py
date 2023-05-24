@@ -43,7 +43,7 @@ class PostGenerated(CommonModel):
         blank=True,
     )
 
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
 
     # gpt feature
     time_taken = models.FloatField(null=True, blank=True)
@@ -51,4 +51,7 @@ class PostGenerated(CommonModel):
     is_failed = models.BooleanField(default=False)
 
     def __str__(self):
+        # ellipsis
+        if len(self.content) > 30:
+            return self.content[:30] + "..."
         return self.content

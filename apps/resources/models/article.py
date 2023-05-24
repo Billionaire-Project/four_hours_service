@@ -25,3 +25,6 @@ class Article(CommonModel):
     content = models.TextField()
     url = models.URLField()
     is_summary = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title

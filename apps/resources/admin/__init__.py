@@ -1,3 +1,4 @@
+from .article_summary import *  # noqa
 from .article import *  # noqa
 from .persona_characteristic import *  # noqa
 from .persona_job import *  # noqa

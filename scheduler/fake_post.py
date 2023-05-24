@@ -1,68 +1,84 @@
 import time
 import openai
-from apps.resources.models import Persona
-from apps.resources.models.article import Article
-from apps.resources.models.persona_preset import PersonaPreset
-from apps.resources.models.post_genetated import PostGenerated
+from apps.resources.models import (
+    ArticleSummary,
+    PersonaPreset,
+    PostGenerated,
+)
 
 
 def gpt_fake_post_by_article():
     """
     - 크롤링 된 기사 중 아직 사용되지 않은 기사들을 대상으로 가짜 포스트를 생성합니다.
     """
-    articles = Article.objects.filter(is_used=False)
 
-    for article in articles:
-        for i in range(2):
-            random_persona = (
-                PersonaPreset.objects.filter(article_kind=article.kind)
-                .order_by("?")
-                .first()
-            )
-            # 뉴스의 성격에 따라 작성자의 프로필을 따로 설정해야할듯?
+    is_new = ArticleSummary.objects.filter(is_used=False).exists()
 
-            prompt = f"""
-            아래와 같은 기사가 있습니다. 이 기사를 바탕으로 트위터에 게시할 글을 작성해주세요.
-            - 기사 제목: {article.title}
-            - 기사 내용: {article.content}
-            작성자의 특징은 다음과 같습니다.
-            - 직업: {random_persona.job}
-            - 성별: {random_persona.gender}
-            - 연령대: {random_persona.age}
-            - 말투: {random_persona.tone}
-            - 성격: {[i.content for i in random_persona.characteristic.all()]}
-            """
+    if is_new:
+        from scheduler.main import sched
 
-            print(f"{article.title} : {random_persona.name} 작성 시작")
+        sched.get_job("gpt_fake_post_by_article").pause()
 
-            try:
-                start = time.time()
-                completion = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
-                    messages=[
-                        {"role": "user", "content": prompt},
-                    ],
+        article_summarys = ArticleSummary.objects.filter(is_used=False)
+
+        print("debug--- gpt_fake_post_by_article start")
+
+        for article_summary in article_summarys:
+            for i in range(2):
+                persona = (
+                    PersonaPreset.objects.filter(
+                        article_kind=article_summary.article.kind
+                    )
+                    .order_by("?")
+                    .first()
                 )
-                end = time.time()
-            except Exception as e:
-                print(e)
-                time.sleep(10)
-                continue
 
-        article.is_used = True
-        article.save()
+                prompt = f"""
+                기사의 요약본을 읽고, SNS에 게시할 글을 작성해주세요.
+                - 기사 제목: {article_summary.article.title}
+                - 기사 요약: {article_summary.summary_content}
+                작성자의 특징은 다음과 같습니다.
+                - 직업: {persona.job}
+                - 성별: {persona.gender}
+                - 연령대: {persona.age}
+                - 말투: {persona.tone}
+                - 성격: {[i.content for i in persona.characteristic.all()]}
+                """
 
-        message = completion.choices[0].message.content
-        # message의 양 끝에 " "가 있다면, 제거합니다.
-        if message[0] == '"' and message[-1] == '"':
-            message = message[1:-1]
+                print(f"{article_summary.article.title} : {persona.name} 작성 시작")
 
-        token = completion.usage.total_tokens
+                try:
+                    start = time.time()
+                    completion = openai.ChatCompletion.create(
+                        model="gpt-3.5-turbo",
+                        messages=[
+                            {"role": "user", "content": prompt},
+                        ],
+                    )
+                    end = time.time()
+                    print(f"time taken: {end - start}")
 
-        PostGenerated.objects.create(
-            content=message,
-            article=article,
-            persona_preset=random_persona,
-            time_taken=end - start,
-            total_token=token,
-        )
+                    article_summary.is_used = True
+                    article_summary.save()
+
+                    message = completion.choices[0].message.content
+
+                    if message[0] == '"':
+                        message = message.replace('"', "")
+
+                    token = completion.usage.total_tokens
+
+                    PostGenerated.objects.create(
+                        content=message,
+                        article=article_summary.article,
+                        persona_preset=persona,
+                        time_taken=end - start,
+                        total_token=token,
+                    )
+
+                except Exception as e:
+                    print(e)
+                    time.sleep(10)
+                    continue
+
+        sched.get_job("gpt_fake_post_by_article").resume()

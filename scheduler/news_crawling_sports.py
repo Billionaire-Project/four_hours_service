@@ -41,13 +41,14 @@ def crawling_sports_news():
             .split("기사제공")[0]
         )
         url = news
-        parsed_news.append(
-            {
-                "title": title,
-                "content": content,
-                "url": url,
-            }
-        )
+        if len(content) > 500:
+            parsed_news.append(
+                {
+                    "title": title,
+                    "content": content,
+                    "url": url,
+                }
+            )
 
     if len(parsed_news) > 0:
         for news in parsed_news:

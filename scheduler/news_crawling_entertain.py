@@ -40,13 +40,14 @@ def crawling_entertain_news():
             .replace("\r", "")
         )
         url = news
-        parsed_news.append(
-            {
-                "title": title,
-                "content": content,
-                "url": url,
-            }
-        )
+        if len(content) > 500:
+            parsed_news.append(
+                {
+                    "title": title,
+                    "content": content,
+                    "url": url,
+                }
+            )
 
     if len(parsed_news) > 0:
         for news in parsed_news:

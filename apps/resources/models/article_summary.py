@@ -12,22 +12,17 @@ class ArticleSummary(CommonModel):
     class Meta:
         default_related_name = "article_summaries"
 
-    class ArticleKindChoices(models.TextChoices):
-        SPORTS = "sports", "Sports"
-        ENTERTAINMENT = "entertainment", "Entertainment"
-        ETC = "etc", "Etc"
-
     id = models.AutoField(primary_key=True)
     article = models.ForeignKey(
         "resources.Article",
         on_delete=models.CASCADE,
         related_name="article_summaries",
     )
-    kind = models.CharField(
-        max_length=20,
-        choices=ArticleKindChoices.choices,
-    )
 
-    title = models.CharField(max_length=100)
     summary_content = models.TextField()
     is_used = models.BooleanField(default=False)
+
+    # gpt feature
+    time_taken = models.FloatField(null=True, blank=True)
+    total_token = models.IntegerField(null=True, blank=True)
+    is_failed = models.BooleanField(default=False)
