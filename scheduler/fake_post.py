@@ -14,7 +14,11 @@ def gpt_fake_post_by_article():
 
     for article in articles:
         for i in range(2):
-            random_persona = PersonaPreset.objects.order_by("?").first()
+            random_persona = (
+                PersonaPreset.objects.filter(article_kind=article.kind)
+                .order_by("?")
+                .first()
+            )
             # 뉴스의 성격에 따라 작성자의 프로필을 따로 설정해야할듯?
 
             prompt = f"""

@@ -23,6 +23,10 @@ class PersonaPreset(CommonModel):
         MALE = "남성", "남성"
         FEMALE = "여성", "여성"
 
+    class ArticleKindChoices(models.TextChoices):
+        SPORTS = "sports", "Sports"
+        ENTERTAINMENT = "entertainment", "Entertainment"
+
     id = models.AutoField(primary_key=True)
 
     name = models.CharField(max_length=100, null=True, blank=True)
@@ -34,6 +38,11 @@ class PersonaPreset(CommonModel):
     gender = models.CharField(
         max_length=20,
         choices=GenderChoices.choices,
+    )
+    article_kind = models.CharField(
+        max_length=20,
+        choices=ArticleKindChoices.choices,
+        default=ArticleKindChoices.SPORTS,
     )
 
     job = models.ForeignKey(

@@ -2,14 +2,15 @@ from django.db import models
 from apps.commons.models.common_model import CommonModel
 
 
-class Article(CommonModel):
+class ArticleSummary(CommonModel):
     """
-    Article Model Definition
-    - 크롤링해오는 아티클들 저장
+    ArticleSummary Model Definition
+    - 크롤링해오는 아티클의 gpt 요약본 저장
+    - 500자 이상의 기사만 사용하고 요약해옴
     """
 
     class Meta:
-        default_related_name = "articles"
+        default_related_name = "article_summaries"
 
     class ArticleKindChoices(models.TextChoices):
         SPORTS = "sports", "Sports"
@@ -17,11 +18,16 @@ class Article(CommonModel):
         ETC = "etc", "Etc"
 
     id = models.AutoField(primary_key=True)
+    article = models.ForeignKey(
+        "resources.Article",
+        on_delete=models.CASCADE,
+        related_name="article_summaries",
+    )
     kind = models.CharField(
         max_length=20,
         choices=ArticleKindChoices.choices,
     )
+
     title = models.CharField(max_length=100)
-    content = models.TextField()
-    url = models.URLField()
-    is_summary = models.BooleanField(default=False)
+    summary_content = models.TextField()
+    is_used = models.BooleanField(default=False)

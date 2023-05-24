@@ -15,6 +15,7 @@ class PersonaPresetAdmin(admin.ModelAdmin):
                     "name",
                     "age",
                     "gender",
+                    "article_kind",
                     "job",
                     "tone",
                     "characteristic",
