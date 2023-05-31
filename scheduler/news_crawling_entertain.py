@@ -22,6 +22,9 @@ def crawling_entertain_news():
     for li in lis:
         entertain_news_list.append(entertain_url + li.find("a")["href"])
 
+    # 연예기사 넘 많아서 5개로 줄임
+    entertain_news_list = entertain_news_list[:5]
+
     parsed_news = []
 
     for news in entertain_news_list:

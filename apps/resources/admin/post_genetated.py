@@ -1,3 +1,4 @@
+from typing import Any
 from django.contrib import admin
 
 from apps.resources.models import PostGenerated
@@ -5,16 +6,16 @@ from apps.resources.models import PostGenerated
 from django.contrib.admin import SimpleListFilter
 
 
-class ActiveFilter(SimpleListFilter):
-    title = "is_active"
-    parameter_name = "is_active"
+class CheckedFilter(SimpleListFilter):
+    title = "is_checked"
+    parameter_name = "is_checked"
 
     def __init__(self, request, params, model, model_admin):
         # set default value to false
-        if "is_active" not in params:
+        if "is_checked" not in params:
             # params = params.copy()
             # 이렇게 하면 all 필터는 안먹힘
-            params["is_active"] = "false"
+            params["is_checked"] = "false"
         super().__init__(request, params, model, model_admin)
 
     def lookups(self, request, model_admin):
@@ -25,9 +26,9 @@ class ActiveFilter(SimpleListFilter):
 
     def queryset(self, request, queryset):
         if self.value() == "true":
-            return queryset.filter(is_active=True)
+            return queryset.filter(is_checked=True)
         if self.value() == "false":
-            return queryset.filter(is_active=False)
+            return queryset.filter(is_checked=False)
 
 
 @admin.register(PostGenerated)
@@ -44,7 +45,8 @@ class PostGeneratedAdmin(admin.ModelAdmin):
                     "persona_preset",
                     "persona_situation",
                     "topic",
-                    "is_active",
+                    "is_accepted",
+                    "who_checked",
                 ),
             },
         ),
@@ -63,7 +65,7 @@ class PostGeneratedAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "__str__",
-        "is_active",
+        "is_checked",
     )
     list_display_links = (
         "id",
@@ -77,6 +79,13 @@ class PostGeneratedAdmin(admin.ModelAdmin):
         "time_taken",
         "total_token",
         "is_failed",
+        "who_checked",
     )
-    list_filter = [ActiveFilter]
+    list_filter = [CheckedFilter, "is_accepted"]
     list_per_page = 10
+
+    def save_model(self, request: Any, obj: Any, form: Any, change: Any) -> None:
+        obj.who_checked = request.user
+        obj.is_checked = True
+        obj.save()
+        return super().save_model(request, obj, form, change)

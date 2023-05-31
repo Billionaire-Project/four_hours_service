@@ -31,6 +31,12 @@ class Post(CommonModel):
 
     # gpt generated
     is_generated = models.BooleanField(default=False)
+    generated_post = models.ForeignKey(
+        "resources.PostGenerated",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
         return self.content

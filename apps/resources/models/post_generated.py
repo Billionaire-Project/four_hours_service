@@ -11,6 +11,11 @@ class PostGenerated(CommonModel):
     class Meta:
         default_related_name = "post_generateds"
 
+    class PostChoices(models.TextChoices):
+        NONE = "none", "None"
+        ACCEPTED = "accepted", "Accepted"
+        REJECTED = "rejected", "Rejected"
+
     id = models.AutoField(primary_key=True)
     content = models.TextField()
 
@@ -43,7 +48,23 @@ class PostGenerated(CommonModel):
         blank=True,
     )
 
-    is_active = models.BooleanField(default=False)
+    # 관리부분
+    # 해당 포스트를 체택할 것인지
+    is_accepted = models.CharField(
+        choices=PostChoices.choices,
+        default=PostChoices.NONE,
+        max_length=10,
+    )
+    # 검수되었는지 확인, admin에서 save하면 자동으로 True할당
+    is_checked = models.BooleanField(default=False)
+    # 누가 검수했는지
+    who_checked = models.ForeignKey(
+        "users.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    is_posted = models.BooleanField(default=False)
 
     # gpt feature
     time_taken = models.FloatField(null=True, blank=True)
