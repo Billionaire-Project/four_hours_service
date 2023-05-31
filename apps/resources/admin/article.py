@@ -16,6 +16,7 @@ class ArticleAdmin(admin.ModelAdmin):
                     "title",
                     "content",
                     "url",
+                    "is_summary",
                 ),
             },
         ),
@@ -24,6 +25,7 @@ class ArticleAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "title",
+        "is_summary",
     )
     list_display_links = (
         "id",
@@ -35,4 +37,5 @@ class ArticleAdmin(admin.ModelAdmin):
         "title",
         "content",
         "url",
+        "is_summary",
     )

@@ -50,7 +50,7 @@ def crawling_sports_news():
                 }
             )
 
-    if len(parsed_news) > 0:
+    if len(content) > 500 & len(content) < 4000:
         for news in parsed_news:
             if Article.objects.filter(title=news["title"]).exists():
                 continue

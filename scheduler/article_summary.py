@@ -31,6 +31,10 @@ def article_summary() -> None:
 
                 start = time.time()
                 sentence = article.content
+                if len(sentence) > 4000:
+                    article.is_summary = True
+                    article.save()
+                    continue
                 print("debug--- sentence : ", sentence)
                 completion = openai.ChatCompletion.create(
                     model="gpt-3.5-turbo",

@@ -6,12 +6,14 @@ from rest_framework.permissions import IsAuthenticated
 
 from drf_yasg.utils import swagger_auto_schema
 
-from apps.commons.views.pagination import Pagination
+from apps.commons.views import Pagination, MyPagination
 
 from apps.posts.serializers import PostMySerializer
 from apps.posts.models import Post
 
 pagination = Pagination(0, 10)
+
+my_pagination = MyPagination(0, 10)
 
 
 class PostMy(APIView):
@@ -50,7 +52,7 @@ class PostMy(APIView):
         queryset = Post.objects.filter(is_deleted=False, user=request.user).order_by(
             "-created_at"
         )
-        result = pagination.get(request, queryset)
+        result = my_pagination.get(request, queryset)
         serializer = PostMySerializer(
             result.pop("result"),
             many=True,
