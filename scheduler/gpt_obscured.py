@@ -4,15 +4,12 @@ import openai
 from django.conf import settings
 from apps.posts.models import Post, PostObscured
 
-# from scheduler.main import sched
-
-openai.api_key = settings.OPENAI_API_KEY
-
 
 def gpt_obscure() -> None:
     is_new = Post.objects.filter(
         is_obscured=False,
         is_deleted=False,
+        obscured_fail=False,
     ).exists()
 
     if is_new:
@@ -25,13 +22,11 @@ def gpt_obscure() -> None:
         posts = Post.objects.filter(
             is_obscured=False,
             is_deleted=False,
+            obscured_fail=False,
         )
 
         print("debug--- gpt_obscure start")
         for post in posts:
-            post_obscured = PostObscured()
-            post_obscured.user = post.user
-            post_obscured.post = post
             time_taken = 0
             total_token = 0
 
@@ -66,40 +61,39 @@ def gpt_obscure() -> None:
                         obscured_content = sentence
                         for word in obscured_words:
                             # gpt가 이상한 단어를 뽑아줬을 경우 예외처리
-                            if result.__contain__(word):
-                                obscured_content = obscured_content.replace(
-                                    word, "_" * len(word)
-                                )
-                            else:
+                            if not result.__contains__(word):
                                 is_failed = True
                                 break
+
+                        for word in obscured_words:
+                            obscured_content = obscured_content.replace(
+                                word, "_" * len(word)
+                            )
+
                         print("debug--- obscured_content : ", obscured_content)
+
+                        post_obscured = PostObscured()
+                        post_obscured.user = post.user
+                        post_obscured.post = post
                         post_obscured.obscured_words = obscured_words
                         post_obscured.obscured_content = obscured_content
                         post_obscured.is_failed = is_failed
                         post_obscured.time_taken = time_taken
                         post_obscured.total_token = total_token
+                        post_obscured.save()
+
+                        post.is_obscured = True
+                        post.save()
                 except:
                     time.sleep(10)
                     continue
-
-                else:
-                    is_failed = True
 
             else:
                 is_failed = True
 
             if is_failed:
-                post_obscured.obscured_words = ""
-                post_obscured.obscured_content = ""
-                post_obscured.is_failed = is_failed
-                post_obscured.time_taken = time_taken
-                post_obscured.total_token = total_token
-
-            post_obscured.save()
-            post.is_obscured = True
-            post.save()
-            print("debug--- gpt_obscure end")
+                post.obscured_fail = True
+                post.save()
 
         # 마무리 후 resume
         sched.get_job("gpt_obscure").resume()

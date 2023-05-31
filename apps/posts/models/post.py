@@ -28,6 +28,7 @@ class Post(CommonModel):
 
     # gpt obsured
     is_obscured = models.BooleanField(default=False)
+    obscured_fail = models.BooleanField(default=False)
 
     # gpt generated
     is_generated = models.BooleanField(default=False)

@@ -23,8 +23,7 @@ def cron_jobs():
     # 매일 00시, 12시에 크롤링 시작
     sched.add_job(crawling_sports_news, "cron", hour="0, 12")
     sched.add_job(crawling_entertain_news, "cron", hour="0, 12")
-    # obscured로직 수정 후 다시 작동
-    # sched.add_job(gpt_obscure, "interval", seconds=1, id="gpt_obscure")
+    sched.add_job(gpt_obscure, "interval", seconds=1, id="gpt_obscure")
     sched.add_job(article_summary, "interval", seconds=1, id="article_summary")
     sched.add_job(
         gpt_fake_post_by_article, "interval", seconds=1, id="gpt_fake_post_by_article"
