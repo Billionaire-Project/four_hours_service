@@ -1,3 +1,4 @@
+import datetime
 from typing import Any
 from django.contrib import admin
 
@@ -47,6 +48,7 @@ class PostGeneratedAdmin(admin.ModelAdmin):
                     "topic",
                     "is_accepted",
                     "who_checked",
+                    "created_at",
                 ),
             },
         ),
@@ -65,7 +67,7 @@ class PostGeneratedAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "__str__",
-        "is_checked",
+        "date",
     )
     list_display_links = (
         "id",
@@ -80,6 +82,7 @@ class PostGeneratedAdmin(admin.ModelAdmin):
         "total_token",
         "is_failed",
         "who_checked",
+        "created_at",
     )
     list_filter = [CheckedFilter, "is_accepted"]
     list_per_page = 10
@@ -89,3 +92,6 @@ class PostGeneratedAdmin(admin.ModelAdmin):
         obj.is_checked = True
         obj.save()
         return super().save_model(request, obj, form, change)
+
+    def date(self, obj):
+        return (obj.created_at + datetime.timedelta(hours=9)).strftime("%m/%d-%H")

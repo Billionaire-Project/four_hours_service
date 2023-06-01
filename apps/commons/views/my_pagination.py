@@ -28,7 +28,6 @@ class MyPagination:
         end = start + offset
 
         while True:
-            print(f"\n\n\nend: {end}\n\n\n")
             if queryset[end - 1 : end].exists():
                 if (
                     queryset[end - 1 : end][0].created_at.date()

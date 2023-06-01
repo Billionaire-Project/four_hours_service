@@ -24,6 +24,8 @@ class PostReceipt(CommonModel):
 
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)
+
+    # 어떤 post로 receipt가 발급되었는지
     post = models.ForeignKey(
         "posts.Post",
         on_delete=models.CASCADE,

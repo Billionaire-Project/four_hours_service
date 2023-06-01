@@ -1,3 +1,4 @@
+import datetime
 from rest_framework import status
 
 from rest_framework.views import APIView
@@ -33,11 +34,13 @@ class PostsObscured(APIView):
         manual_parameters=pagination.get_params,
     )
     def get(self, request, format=None):
-        queryset = (
-            PostObscured.objects.filter(is_deleted=False)
-            .filter(is_failed=False)
-            .order_by("-created_at")
+        queryset = PostObscured.objects.filter(is_deleted=False)
+        queryset = queryset.filter(
+            updated_at__gte=datetime.datetime.now() - datetime.timedelta(days=1)
         )
+        queryset = queryset.filter(is_failed=False)
+        queryset = queryset.order_by("-created_at")
+
         result = pagination.get(request, queryset)
         serializer = PostObscuredSerializer(
             result.pop("result"),

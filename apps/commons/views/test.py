@@ -11,6 +11,7 @@ from apps.commons.views import Pagination, MyPagination
 from apps.posts.models.post import Post
 from apps.posts.serializers import PostGetSerializer, PostPostSerializer
 from apps.posts.serializers.post_my import PostMySerializer
+from apps.posts.views.receipt import Receipt
 from apps.resources.models import ArticleSummary
 from apps.resources.models.persona_preset import PersonaPreset
 from scheduler.fake_post import gpt_fake_post_by_article
@@ -36,58 +37,18 @@ class Test(APIView):
         },
     )
     def get(self, request):
-        posts = Post.objects.filter(
-            is_obscured=False,
-            is_deleted=False,
-            obscured_fail=False,
-        )
+        # get posts within 24 hours
+        # posts = (
+        #     Post.objects.filter(
+        #         updated_at__gte=datetime.datetime.now() - datetime.timedelta(days=1)
+        #     )
+        #     .order_by("-updated_at")
+        #     .all()
+        # )
 
-        post = posts[0]
+        # serializer = PostGetSerializer(posts, many=True, context={"request": request})
+        # result = serializer.data
 
-        sentence = post.content
+        result = Receipt.post_exist_check(request.user)
 
-        print("debug--- sentence : ", sentence)
-
-        completion = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            # model="gpt-4",
-            messages=[
-                {
-                    "role": "user",
-                    "content": "다음 문장의 핵심 단어만 출력해줘",
-                },
-                {"role": "user", "content": sentence},
-            ],
-        )
-
-        result = completion.choices[0].message.content
-        obscured_words = result.split(", ")
-
-        print("debug--- obscured_words : ", obscured_words)
-
-        obscured_content = sentence
-
-        for word in obscured_words:
-            # gpt가 이상한 단어를 뽑아줬을 경우 예외처리
-            if result.__contains__(word):
-                obscured_content = obscured_content.replace(word, "_" * len(word))
-            else:
-                is_failed = True
-                break
-
-        print(obscured_content)
-
-        # if not result.__contains__("false"):  # 변경 가능
-        #     obscured_words = result.split(", ")
-        #     print("debug--- obscured_words : ", obscured_words)
-        #     obscured_content = sentence
-        #     for word in obscured_words:
-        #         # gpt가 이상한 단어를 뽑아줬을 경우 예외처리
-        #         if result.__contain__(word):
-        #             obscured_content = obscured_content.replace(word, "_" * len(word))
-        #         else:
-        #             is_failed = True
-        #             break
-        #     print("debug--- obscured_content : ", obscured_content)
-
-        return Response()
+        return Response(result)

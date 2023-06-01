@@ -7,13 +7,14 @@ class PostReceiptSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostReceipt
         fields = (
-            "id",
-            "user",
-            "post",
+            # "id",
+            # "user",
+            # "post",
             "is_postable",
             "is_readable",
             "readable_ended_at",
             "postable_at",
+            "post_delete_stack",
         )
 
     # def to_representation(self, instance):

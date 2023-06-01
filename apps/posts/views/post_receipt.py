@@ -14,6 +14,12 @@ class PostReceiptCheck(APIView):
 
     """
     # PostReceipt 확인용
+    ### - 해당 api가 불리면 Receipt를 확인함
+    ## 해당 api가 불리는 상황
+     - 로그인 시
+     - WritePage 진입 시?
+     - 글 작성 시?
+     - 글 열람 시?
     """
 
     @swagger_auto_schema(
