@@ -40,3 +40,6 @@ class PostAdmin(admin.ModelAdmin):
         "id",
         "__str__",
     )
+    search_fields = [
+        "user__username",
+    ]

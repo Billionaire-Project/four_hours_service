@@ -28,7 +28,7 @@ class MyPagination:
         end = start + offset
 
         while True:
-            if queryset[end - 1 : end].exists():
+            if queryset[end : end + 1].exists():
                 if (
                     queryset[end - 1 : end][0].created_at.date()
                     == queryset[end : end + 1][0].created_at.date()

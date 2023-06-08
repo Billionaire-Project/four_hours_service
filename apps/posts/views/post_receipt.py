@@ -5,8 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from drf_yasg.utils import swagger_auto_schema
 
-from apps.posts.models import PostReceipt
 from apps.posts.serializers import PostReceiptSerializer
+from apps.posts.views.receipt import callback_by_client_api
 
 
 class PostReceiptCheck(APIView):
@@ -31,6 +31,5 @@ class PostReceiptCheck(APIView):
         },
     )
     def get(self, request):
-        post_receipt = PostReceipt.objects.get(user_id=request.user.id)
-        serializer = PostReceiptSerializer(post_receipt)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        result = callback_by_client_api(request.user)
+        return Response(result, status=status.HTTP_200_OK)

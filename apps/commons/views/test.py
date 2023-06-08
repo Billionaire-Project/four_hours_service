@@ -11,7 +11,7 @@ from apps.commons.views import Pagination, MyPagination
 from apps.posts.models.post import Post
 from apps.posts.serializers import PostGetSerializer, PostPostSerializer
 from apps.posts.serializers.post_my import PostMySerializer
-from apps.posts.views.receipt import Receipt
+from apps.posts.views.receipt import callback_by_client_api
 from apps.resources.models import ArticleSummary
 from apps.resources.models.persona_preset import PersonaPreset
 from scheduler.fake_post import gpt_fake_post_by_article
@@ -37,18 +37,7 @@ class Test(APIView):
         },
     )
     def get(self, request):
-        # get posts within 24 hours
-        # posts = (
-        #     Post.objects.filter(
-        #         updated_at__gte=datetime.datetime.now() - datetime.timedelta(days=1)
-        #     )
-        #     .order_by("-updated_at")
-        #     .all()
-        # )
+        tmp = callback_by_client_api(request.user)
+        print(tmp)
 
-        # serializer = PostGetSerializer(posts, many=True, context={"request": request})
-        # result = serializer.data
-
-        result = Receipt.post_exist_check(request.user)
-
-        return Response(result)
+        return Response(tmp, status=status.HTTP_200_OK)

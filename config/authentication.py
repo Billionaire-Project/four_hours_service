@@ -3,7 +3,6 @@ import os
 from django.utils import timezone
 
 from apps.users.models import User, UserSession
-from apps.posts.models import PostReceipt
 from firebase_admin import auth
 from firebase_admin import credentials
 from firebase_admin import initialize_app
@@ -99,8 +98,6 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
                 date_joined=now,
                 firebase_picture=picture,
             )
-            # 가입시 영수증 발행
-            PostReceipt.objects.create(user=user)
 
         user.last_login = now
         user.save()

@@ -13,11 +13,9 @@ from apps.posts.serializers import (
     PostObscuredSerializer,
 )
 from apps.posts.models import Post, PostObscured
-from apps.posts.views.receipt import Receipt
 
 
 pagination = Pagination(0, 10)
-receipt = Receipt()
 
 
 class Posts(APIView):
@@ -43,43 +41,23 @@ class Posts(APIView):
         manual_parameters=pagination.get_params,
     )
     def get(self, request):
-        if receipt.callback_when_post_get(request.user):
-            queryset = Post.objects.filter(is_deleted=False)
-            queryset = queryset.filter(
-                updated_at__gte=datetime.datetime.now() - datetime.timedelta(days=1)
-            )
-            queryset = queryset.exclude(post_reports__user_id=request.user.id)
-            queryset = queryset.order_by("-updated_at")
-            ## 추후에 24시간 제한 걸기
+        queryset = Post.objects.filter(is_deleted=False)
+        queryset = queryset.filter(
+            updated_at__gte=datetime.datetime.now() - datetime.timedelta(days=1)
+        )
+        queryset = queryset.exclude(post_reports__user_id=request.user.id)
+        queryset = queryset.order_by("-updated_at")
 
-            result = pagination.get(request, queryset)
-            serializer = PostGetSerializer(
-                result.pop("result"),
-                many=True,
-                context={"request": request},
-            )
+        result = pagination.get(request, queryset)
+        serializer = PostGetSerializer(
+            result.pop("result"),
+            many=True,
+            context={"request": request},
+        )
 
-            result["posts"] = serializer.data
+        result["posts"] = serializer.data
 
-            return Response(result, status=status.HTTP_200_OK)
-
-        else:
-            queryset = PostObscured.objects.filter(is_deleted=False)
-            queryset = queryset.filter(
-                updated_at__gte=datetime.datetime.now() - datetime.timedelta(days=1)
-            )
-            queryset = queryset.filter(is_failed=False)
-            queryset = queryset.order_by("-created_at")
-
-            result = pagination.get(request, queryset)
-            serializer = PostObscuredSerializer(
-                result.pop("result"),
-                many=True,
-            )
-
-            result["posts"] = serializer.data
-
-            return Response(result, status=status.HTTP_200_OK)
+        return Response(result, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
         operation_description="""
