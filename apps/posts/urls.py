@@ -8,6 +8,7 @@ from apps.posts.views import (
     PostMy,
     PostReceiptCheck,
     PostReportId,
+    PostDeleteReasons,
 )
 
 urlpatterns = [
@@ -18,5 +19,6 @@ urlpatterns = [
     path("obscured/", PostsObscured.as_view(), name="post_obscureds"),
     path("receipt/", PostReceiptCheck.as_view(), name="post_receipt"),
     path("report/<int:pk>/", PostReportId.as_view(), name="post_report"),
+    path("delete_reason/", PostDeleteReasons.as_view(), name="post_delete_reason"),
     path("", Posts.as_view(), name="posts"),
 ]

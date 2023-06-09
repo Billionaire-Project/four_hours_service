@@ -109,20 +109,20 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
         issued_at = timezone.datetime.fromtimestamp(decoded_token["iat"]).astimezone()
         expired_at = timezone.datetime.fromtimestamp(decoded_token["exp"]).astimezone()
 
-        user_session, created = UserSession.objects.get_or_create(
-            user=user,
-            expired_at=expired_at,
-            defaults={
-                "logged_out_at": None,
-                "auth_time": auth_time,
-                "issued_at": issued_at,
-                "social": social,
-            },
-        )
+        # user_session, created = UserSession.objects.get_or_create(
+        #     user=user,
+        #     expired_at=expired_at,
+        #     defaults={
+        #         "logged_out_at": None,
+        #         "auth_time": auth_time,
+        #         "issued_at": issued_at,
+        #         "social": social,
+        #     },
+        # )
 
-        if not created:
-            user_session.accessed_at = now
-            user_session.count += 1
-            user_session.save()
+        # if not created:
+        #     user_session.accessed_at = now
+        #     user_session.count += 1
+        #     user_session.save()
 
         return (user, None)

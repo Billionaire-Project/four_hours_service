@@ -85,6 +85,9 @@ def callback_by_client_api(user: User) -> dict:
         )
         result["is_readable"] = True
         result["readable_ended_at"] = queryset.updated_at + timedelta(days=1)
+    else:
+        result["is_readable"] = False
+        result["readable_ended_at"] = None
 
     if post_in_4(user):
         queryset = (
