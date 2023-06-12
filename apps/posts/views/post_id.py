@@ -7,11 +7,12 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 # from drf_yasg import openapi
 
 from apps.posts.serializers import PostGetSerializer
-from apps.posts.models import Post
+from apps.posts.models import Post, PostDeleteReason
 
 
 class PostId(APIView):
@@ -51,11 +52,22 @@ class PostId(APIView):
         ## soft delete
         ### - 요청한 포스트가 삭제되었다면 404를 반환합니다.
         """,
+        manual_parameters=[
+            openapi.Parameter(
+                "reason",
+                openapi.IN_QUERY,
+                description="삭제 이유의 id",
+                type=openapi.TYPE_INTEGER,
+                default=1,
+            ),
+        ],
     )
     def delete(self, request, pk, format=None):
         post = self.get_object(pk)
+        post_delete_reason = request.query_params.get("reason", 1)
         if post.is_deleted:
             raise exceptions.NotFound
+        post.delete_reason = PostDeleteReason.objects.get(id=post_delete_reason)
         post.is_deleted = True
         post.deleted_at = timezone.now()
         post.save()

@@ -2,7 +2,6 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 # from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-import datetime
 from scheduler.fake_post import gpt_fake_post_by_article
 
 from scheduler.gpt_obscured import gpt_obscure
@@ -10,13 +9,10 @@ from scheduler.article_summary import article_summary
 from scheduler.news_crawling_entertain import crawling_entertain_news
 from scheduler.news_crawling_sports import crawling_sports_news
 from scheduler.post_generated_post import post_generatred_post
+from scheduler.random_generated_to_post import random_generated_to_post
 
 sched = BackgroundScheduler(timezone="Asia/Seoul")
 sched.start()
-
-
-def test():
-    print(f"cron test 입니다. {datetime.datetime.today()}")
 
 
 def cron_jobs():
@@ -30,6 +26,9 @@ def cron_jobs():
     )
     sched.add_job(
         post_generatred_post, "interval", seconds=1, id="post_generatred_post"
+    )
+    sched.add_job(
+        random_generated_to_post, "interval", hours=1, id="random_generated_to_post"
     )
 
 

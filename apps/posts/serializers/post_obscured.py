@@ -18,22 +18,10 @@ class PostObscuredSerializer(serializers.ModelSerializer):
             "content",
             "created_at",
             "updated_at",
-            "is_owner",
-            "is_liked",
-            "is_reported",
         )
 
     def get_content(self, obj) -> str:
         return obj.obscured_content
-
-    def get_is_owner(self, obj) -> bool:
-        return False
-
-    def get_is_liked(self, obj) -> bool:
-        return False
-
-    def get_is_reported(self, obj) -> bool:
-        return False
 
     # def to_representation(self, instance):
     #     resp = super().to_representation(instance)

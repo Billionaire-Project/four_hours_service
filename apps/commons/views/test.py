@@ -14,6 +14,8 @@ from apps.posts.serializers.post_my import PostMySerializer
 from apps.posts.views.receipt import callback_by_client_api
 from apps.resources.models import ArticleSummary
 from apps.resources.models.persona_preset import PersonaPreset
+from apps.resources.models.post_generated import PostGenerated
+from scheduler.random_generated_to_post import random_generated_to_post
 from scheduler.fake_post import gpt_fake_post_by_article
 
 
@@ -37,7 +39,9 @@ class Test(APIView):
         },
     )
     def get(self, request):
-        tmp = callback_by_client_api(request.user)
-        print(tmp)
+        random_generated_to_post()
 
-        return Response(tmp, status=status.HTTP_200_OK)
+        # tmp = callback_by_client_api(request.user)
+        # print(tmp)
+
+        return Response(status=status.HTTP_200_OK)
