@@ -6,9 +6,6 @@ from apps.posts.models import PostObscured
 # TODO: 앞단과 얘기해서 변경해야 할 부분이 많다!
 class PostObscuredSerializer(serializers.ModelSerializer):
     content = serializers.SerializerMethodField()
-    is_owner = serializers.SerializerMethodField()
-    is_liked = serializers.SerializerMethodField()
-    is_reported = serializers.SerializerMethodField()
 
     class Meta:
         model = PostObscured

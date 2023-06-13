@@ -11,10 +11,7 @@ class TopicAdmin(admin.ModelAdmin):
         (
             "Topic",
             {
-                "fields": (
-                    # "id",
-                    "topic",
-                ),
+                "fields": ("topic",),
             },
         ),
         (
@@ -25,7 +22,6 @@ class TopicAdmin(admin.ModelAdmin):
                     "topic_used_at",
                     "is_use",
                 ),
-                "classes": ("collapse",),
             },
         ),
     )
@@ -40,4 +36,8 @@ class TopicAdmin(admin.ModelAdmin):
     list_display_links = (
         "id",
         "__str__",
+    )
+    readonly_fields = (
+        "is_used",
+        "topic_used_at",
     )

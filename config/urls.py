@@ -48,6 +48,7 @@ urlpatterns += [
     path("api/v1/a_test/", include("apps.commons.urls")),
     path("api/v1/auth/", include("apps.users.urls")),
     path("api/v1/posts/", include("apps.posts.urls")),
+    path("api/v1/resources/", include("apps.resources.urls")),
 ]
 
 # scheduler
