@@ -9,12 +9,14 @@ def random_generated_to_post():
     print("debug--- random_generated_to_post start")
     tmp = (
         PostGenerated.objects.filter(
-            updated_at__gte=datetime.datetime.now() - datetime.timedelta(days=1)
+            updated_at__gte=datetime.datetime.now() - datetime.timedelta(days=1),
         )
         .order_by("?")
         .first()
     )
 
-    tmp.is_accepted = PostGenerated.PostChoices.ACCEPTED
-    tmp.is_checked = True
-    tmp.save()
+    print(tmp)
+    if tmp:
+        tmp.is_accepted = PostGenerated.PostChoices.ACCEPTED
+        tmp.is_checked = True
+        tmp.save()

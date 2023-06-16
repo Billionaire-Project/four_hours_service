@@ -25,7 +25,7 @@ def article_summary() -> None:
         print("debug--- summary start")
         for article in articles:
             sentence = article.content
-            if len(sentence) > 4000:
+            if len(sentence) < 4000:
                 try:
                     article_summary = ArticleSummary()
                     article_summary.article = article

@@ -28,7 +28,10 @@ def cron_jobs():
         post_generatred_post, "interval", seconds=1, id="post_generatred_post"
     )
     sched.add_job(
-        random_generated_to_post, "interval", hours=1, id="random_generated_to_post"
+        random_generated_to_post,
+        "cron",
+        hour="0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22",
+        id="random_generated_to_post",
     )
 
 

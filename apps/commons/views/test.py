@@ -40,6 +40,9 @@ class Test(APIView):
         },
     )
     def get(self, request):
-        tmp = Topic.objects.all()
-        print(tmp)
+        # random_generated_to_post()
+        tmp = PostGenerated.objects.filter(
+            updated_at__gte=datetime.datetime.now() - datetime.timedelta(days=1),
+        ).all()
+        print(len(tmp))
         return Response(status=status.HTTP_200_OK)
