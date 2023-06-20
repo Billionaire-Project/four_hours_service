@@ -30,9 +30,10 @@ def gpt_obscure() -> None:
             time_taken = 0
             total_token = 0
 
-            if count_meaningful_words(post.content) >= 5:
+            if (count_meaningful_words(post.content) >= 5) and (
+                len(post.content) < 4000
+            ):
                 sentence = post.content
-                print("debug--- sentence : ", sentence)
                 try:
                     start = time.time()
                     completion = openai.ChatCompletion.create(

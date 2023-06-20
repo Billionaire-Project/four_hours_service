@@ -60,6 +60,8 @@ def article_summary() -> None:
                     article.save()
                 except Exception as e:
                     print("debug--- error : ", e)
+                    article.is_summary = True
+                    article.save()
                     time.sleep(10)
                     continue
             else:

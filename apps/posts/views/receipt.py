@@ -25,8 +25,8 @@ def post_in_24(user: User) -> bool:
 def post_in_4(user: User) -> bool:
     queryset = Post.objects.filter(
         is_deleted=False,
-        # updated_at__gte=datetime.now() - timedelta(hours=4),
-        updated_at__gte=datetime.now() - timedelta(minutes=1),
+        updated_at__gte=datetime.now() - timedelta(hours=4),
+        # updated_at__gte=datetime.now() - timedelta(minutes=1),
         user=user.id,
     )
     return queryset.exists()
@@ -36,8 +36,8 @@ def post_in_4(user: User) -> bool:
 def post_delete_count_check(user: User) -> int:
     queryset = Post.objects.filter(
         is_deleted=True,
-        # updated_at__gte=datetime.now() - timedelta(hours=4),
-        updated_at__gte=datetime.now() - timedelta(minutes=1),
+        updated_at__gte=datetime.now() - timedelta(hours=4),
+        # updated_at__gte=datetime.now() - timedelta(minutes=1),
         user=user.id,
     )
 
@@ -69,8 +69,8 @@ def callback_by_client_api(user: User) -> dict:
         result["is_readable"] = False
         result["readable_ended_at"] = None
         result["is_postable"] = False
-        # result["postable_at"] = last_deleted_post.updated_at + timedelta(hours=4)
-        result["postable_at"] = last_deleted_post.updated_at + timedelta(minutes=1)
+        result["postable_at"] = last_deleted_post.updated_at + timedelta(hours=4)
+        # result["postable_at"] = last_deleted_post.updated_at + timedelta(minutes=1)
         return result
 
     if post_in_24(user):
@@ -93,16 +93,16 @@ def callback_by_client_api(user: User) -> dict:
         queryset = (
             Post.objects.filter(
                 is_deleted=False,
-                # updated_at__gte=datetime.now() - timedelta(hours=4),
-                updated_at__gte=datetime.now() - timedelta(minutes=1),
+                updated_at__gte=datetime.now() - timedelta(hours=4),
+                # updated_at__gte=datetime.now() - timedelta(minutes=1),
                 user=user.id,
             )
             .order_by("-updated_at")
             .first()
         )
         result["is_postable"] = False
-        # result["postable_at"] = queryset.updated_at + timedelta(hours=4)
-        result["postable_at"] = queryset.updated_at + timedelta(minutes=1)
+        result["postable_at"] = queryset.updated_at + timedelta(hours=4)
+        # result["postable_at"] = queryset.updated_at + timedelta(minutes=1)
     else:
         result["is_postable"] = True
         result["postable_at"] = None

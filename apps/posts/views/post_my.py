@@ -59,6 +59,7 @@ class PostMy(APIView):
         )
 
         # serializer.data의 인자를 날짜별로 묶어서 반환
+        # TODO: 키값에만 Today, Yesterday, 드가게 /// post["created_at"]에는 그대로 날짜가 들어가게
         posts_by_date = {}
         for post in serializer.data:
             if post["created_at"][:10] == str(datetime.date.today()):
