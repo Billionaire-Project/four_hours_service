@@ -17,6 +17,7 @@ class UserSessionAdmin(admin.ModelAdmin):
                     "accessed_at",
                     "logged_out_at",
                     "expired_at",
+                    "is_expired",
                     "social",
                     "count",
                 ),
@@ -29,15 +30,16 @@ class UserSessionAdmin(admin.ModelAdmin):
         "accessed_at",
         "logged_out_at",
         "expired_at",
+        "is_expired",
         "social",
         "count",
     )
     list_display = (
         "id",
         "user",
-        "issued_at",
         "accessed_at",
         "logged_out_at",
+        "is_expired",
         "count",
     )
     list_display_links = (

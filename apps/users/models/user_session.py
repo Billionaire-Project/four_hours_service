@@ -27,6 +27,8 @@ class UserSession(CommonModel):
     logged_out_at = models.DateTimeField(null=True, default=None)  # logout 시간
     expired_at = models.DateTimeField(null=True, blank=True)  # exp
 
+    is_expired = models.BooleanField(default=False)
+
     social = models.CharField(
         max_length=20,
         choices=SocialKindChoices.choices,

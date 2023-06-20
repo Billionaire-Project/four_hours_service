@@ -40,6 +40,7 @@ class Logout(APIView):
         )
         session = sessions.last()
         session.logged_out_at = timezone.now()
+        session.is_expired = True
         session.save()
 
         return Response(status=HTTP_200_OK)
