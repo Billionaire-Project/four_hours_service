@@ -6,6 +6,7 @@ from apps.posts.models import PostObscured
 # TODO: 앞단과 얘기해서 변경해야 할 부분이 많다!
 class PostObscuredSerializer(serializers.ModelSerializer):
     content = serializers.SerializerMethodField()
+    is_owner = serializers.SerializerMethodField()
 
     class Meta:
         model = PostObscured
@@ -13,9 +14,13 @@ class PostObscuredSerializer(serializers.ModelSerializer):
             "id",
             "user",
             "content",
+            "is_owner",
             "created_at",
             "updated_at",
         )
+
+    def get_is_owner(self, obj) -> bool:
+        return obj.user == self.context.get("request").user
 
     def get_content(self, obj) -> str:
         return obj.obscured_content

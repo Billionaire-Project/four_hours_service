@@ -45,6 +45,7 @@ class PostsObscured(APIView):
         serializer = PostObscuredSerializer(
             result.pop("result"),
             many=True,
+            context={"request": request},
         )
 
         result["posts"] = serializer.data

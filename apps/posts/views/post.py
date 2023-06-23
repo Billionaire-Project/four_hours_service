@@ -10,7 +10,6 @@ from apps.commons.views.pagination import Pagination
 from apps.posts.serializers import (
     PostGetSerializer,
     PostPostSerializer,
-    PostObscuredSerializer,
 )
 from apps.posts.models import Post, PostObscured
 
