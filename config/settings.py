@@ -42,6 +42,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "firebase_auth",
     "drf_yasg",
+    "corsheaders",
 ]
 
 SYSTEM_APPS = [
@@ -56,6 +57,7 @@ SYSTEM_APPS = [
 INSTALLED_APPS = CUSTOM_APPS + THIRD_PARTY_APPS + SYSTEM_APPS
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -136,6 +138,7 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -153,3 +156,10 @@ REST_FRAMEWORK = {
         "config.authentication.FirebaseAuthentication",
     ),
 }
+
+# CORS_ALLOWED_ORIGINS = [
+#     "http://lukaid.iptime.org:1337/swagger/",
+# ]
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = ["http://lukaid.iptime.org:1337/"]

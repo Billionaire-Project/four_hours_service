@@ -21,6 +21,8 @@ class PostId(APIView):
     def get_object(self, pk):
         try:
             post = Post.objects.get(id=pk)
+            if post.is_deleted:
+                raise exceptions.NotFound
             return post
         except post.DoesNotExist:
             raise exceptions.NotFound

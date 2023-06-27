@@ -86,8 +86,7 @@ def gpt_obscure() -> None:
                         post.is_obscured = True
                         post.save()
                 except:
-                    time.sleep(10)
-                    continue
+                    is_failed = True
 
             else:
                 is_failed = True
