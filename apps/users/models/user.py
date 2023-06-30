@@ -39,7 +39,12 @@ class User(AbstractUser):
     # delete option
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True)
-    # deleted_reason
+    deleted_reason = models.ForeignKey(
+        "users.UserDeleteReason",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
     # 재가입시 패널티 없고 아예 새로운 아이디로 다시 시작
     # firebase auth에서까지 삭제
 

@@ -15,11 +15,11 @@ class CustomUserAdmin(UserAdmin):
             "Profile",
             {
                 "fields": (
-                    # "id",
                     "name",
                     "username",
                     "email",
                     "firebase_picture",
+                    "uid",
                 ),
             },
         ),
@@ -52,6 +52,7 @@ class CustomUserAdmin(UserAdmin):
         "firebase_picture",
         "last_login",
         "date_joined",
+        "uid",
     )
     list_display = (
         "id",
