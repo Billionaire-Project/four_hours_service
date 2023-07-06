@@ -1,0 +1,58 @@
+version: "3"
+
+services:
+  nginx_prod:
+    container_name: nginx_prod
+    build: ./nginx_prod
+    ports:
+      - ${ENTRY_PORT}:${ENTRY_PORT}
+    volumes:
+      - ./nginx_prod/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx_prod/settings.conf:/etc/nginx/settings.conf
+      - static_volume:/usr/src/four_hours_service/staticfiles/
+    depends_on:
+      - django_prod
+      - db_prod
+    networks:
+      - prod
+
+  django_prod:
+    container_name: django_prod
+    build:
+      context: .
+      dockerfile: ${DOCKERFILE}
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:${DJANGO_PORT}
+    volumes:
+      - static_volume:/usr/src/four_hours_service/staticfiles/
+    expose:
+      - ${DJANGO_PORT}
+    env_file: ${ENVFILE}
+    depends_on:
+      - db_prod
+    networks:
+      - prod
+
+  db_prod:
+    container_name: db_prod
+    image: postgres:15.2-alpine
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data_prod/
+    expose:
+      - ${SQL_PORT}
+    ports:
+      - "${SQL_PORT}:${SQL_PORT}"
+    environment:
+      POSTGRES_DB: ${SQL_DATABASE}
+      POSTGRES_USER: ${SQL_USER}
+      POSTGRES_PASSWORD: ${SQL_PASSWORD}
+    command: -p ${SQL_PORT}
+    networks:
+      - prod
+
+volumes:
+  postgres_data_prod:
+  static_volume:
+
+networks:
+  prod:
+    driver: bridge

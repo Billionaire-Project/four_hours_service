@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import os
 
+ENTRY_PORT = int(os.environ.get("ENTRY_PORT", default=8000))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -160,10 +161,10 @@ REST_FRAMEWORK = {
 # CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
-    "http://lukaid.iptime.org:1337",
-    "http://www.lukaid.iptime.org:1337",
+    f"http://lukaid.iptime.org:{ENTRY_PORT}",
+    f"http://www.lukaid.iptime.org:{ENTRY_PORT}",
 ]
 CORS_ORIGIN_WHITELIST = [
-    "http://lukaid.iptime.org:1337",
-    "http://www.lukaid.iptime.org:1337",
+    f"http://lukaid.iptime.org:{ENTRY_PORT}",
+    f"http://www.lukaid.iptime.org:{ENTRY_PORT}",
 ]

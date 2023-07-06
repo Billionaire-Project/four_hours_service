@@ -9,7 +9,7 @@ from scheduler import cron_jobs
 
 import os
 
-PORT = int(os.environ.get("PORT", default=8000))
+ENTRY_PORT = int(os.environ.get("ENTRY_PORT", default=8000))
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -27,7 +27,7 @@ schema_view = get_schema_view(
         contact=openapi.Contact(name="이성우", email="crescent3859@gmail.com"),
         license=openapi.License(name="four_hours_api_docs"),
     ),
-    url=f"http://lukaid.iptime.org:{PORT}/",
+    url=f"http://lukaid.iptime.org:{ENTRY_PORT}/",
     public=True,
     permission_classes=(permissions.AllowAny,),
     patterns=urlpatterns,

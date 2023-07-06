@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: ${DOCKERFILE}
+    command: python manage.py runserver 0.0.0.0:3333
+    volumes:
+      - ./:/usr/src/four_hours_service/
+    ports:
+      - 3333:3333
+    env_file: ${ENVFILE}
+
+  db:
+    image: postgres:15.2-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 3331:3331
+    environment:
+      POSTGRES_DB: ${SQL_DATABASE}
+      POSTGRES_USER: ${SQL_USER}
+      POSTGRES_PASSWORD: ${SQL_PASSWORD}
+
+volumes:
+  postgres_data:

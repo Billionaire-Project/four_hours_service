@@ -5,7 +5,7 @@ services:
     container_name: nginx
     build: ./nginx
     ports:
-      - 1337:80
+      - ${ENTRY_PORT}:${ENTRY_PORT}
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/settings.conf:/etc/nginx/settings.conf
@@ -13,33 +13,46 @@ services:
     depends_on:
       - django
       - db
+    networks:
+      - test
 
   django:
     container_name: django
     build:
       context: .
       dockerfile: ${DOCKERFILE}
-    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:${DJANGO_PORT}
     volumes:
       - static_volume:/usr/src/four_hours_service/staticfiles/
     expose:
-      - 8000
+      - ${DJANGO_PORT}
     env_file: ${ENVFILE}
     depends_on:
       - db
+    networks:
+      - test
 
   db:
     container_name: db
     image: postgres:15.2-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    expose:
+      - ${SQL_PORT}
     ports:
-      - 5432:5432
+      - "${SQL_PORT}:${SQL_PORT}"
     environment:
       POSTGRES_DB: ${SQL_DATABASE}
       POSTGRES_USER: ${SQL_USER}
       POSTGRES_PASSWORD: ${SQL_PASSWORD}
+    command: -p ${SQL_PORT}
+    networks:
+      - test
 
 volumes:
   postgres_data:
   static_volume:
+
+networks:
+  test:
+    driver: bridge
