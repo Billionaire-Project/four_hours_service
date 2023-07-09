@@ -3,6 +3,7 @@ from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
+from rest_framework.permissions import IsAuthenticated
 
 from firebase_admin import auth
 
@@ -13,6 +14,8 @@ from apps.users.models import UserSession
 
 
 class Logout(APIView):
+    permission_classes = [IsAuthenticated]
+
     """
     프론트에서 firebase auth에 토큰 만료 요청 때리고, 서버에선 세션만 닫아주면 될듯?
     """

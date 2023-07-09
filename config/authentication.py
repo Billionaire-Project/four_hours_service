@@ -81,11 +81,12 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
         except Exception:
             raise FirebaseError()
 
-        try:
+        if User.objects.filter(uid=uid, is_deleted=False).exists():
             user = User.objects.get(uid=uid, is_deleted=False)
-        except User.DoesNotExist:
+        else:
             # uid가 일치하지만, 이미 삭제된 유저라면
             if User.objects.filter(uid=uid, is_deleted=True).exists():
+                print("This user is deleted")
                 return Response(
                     {"message": "This user is deleted"},
                     status=status.HTTP_401_UNAUTHORIZED,

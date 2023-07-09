@@ -20,6 +20,8 @@ class CustomUserAdmin(UserAdmin):
                     "email",
                     "firebase_picture",
                     "uid",
+                    "is_deleted",
+                    "deleted_at",
                 ),
             },
         ),
@@ -53,11 +55,14 @@ class CustomUserAdmin(UserAdmin):
         "last_login",
         "date_joined",
         "uid",
+        "is_deleted",
+        "deleted_at",
     )
     list_display = (
         "id",
         "username",
         "email",
+        "is_deleted",
     )
     list_display_links = (
         "id",

@@ -46,10 +46,10 @@ class Test(APIView):
         # ).all()
         # print(len(tmp))
 
-        user = request.user
+        # user = request.user
 
-        posts = user.posts.all()
+        # posts = user.posts.all()
 
-        print(len(posts))
+        # print(len(posts))
 
         return Response(status=status.HTTP_200_OK)

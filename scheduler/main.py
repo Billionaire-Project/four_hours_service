@@ -11,6 +11,10 @@ from scheduler.news_crawling_sports import crawling_sports_news
 from scheduler.post_generated_post import post_generatred_post
 from scheduler.random_generated_to_post import random_generated_to_post
 
+import os
+
+ENTRY_PORT = int(os.environ.get("ENTRY_PORT", default=3333))
+
 sched = BackgroundScheduler(timezone="Asia/Seoul")
 sched.start()
 
@@ -27,12 +31,13 @@ def cron_jobs():
     sched.add_job(
         post_generatred_post, "interval", seconds=1, id="post_generatred_post"
     )
-    sched.add_job(
-        random_generated_to_post,
-        "cron",
-        hour="0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22",
-        id="random_generated_to_post",
-    )
+    if ENTRY_PORT == 3333:
+        sched.add_job(
+            random_generated_to_post,
+            "cron",
+            hour="0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22",
+            id="random_generated_to_post",
+        )
 
 
 # sched = BackgroundScheduler()  # django와는 다른 thread에서 돌아감

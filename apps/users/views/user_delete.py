@@ -1,19 +1,18 @@
-from datetime import timezone
+from django.utils import timezone
+from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.status import HTTP_200_OK
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from rest_framework import status
-from rest_framework.status import HTTP_200_OK
 from firebase_admin import auth
-
 
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from apps.users.models import User, UserDeleteReason
+from apps.users.models import User
 from apps.users.models.user_session import UserSession
-from apps.users.serializers.me import MeSerializer
+from apps.posts.models import PostDeleteReason
 
 
 class UserDelete(APIView):
@@ -37,13 +36,19 @@ class UserDelete(APIView):
         user = User.objects.get(id=request.user.id)
         uid = user.uid
 
+        if user.is_deleted:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
         try:
-            if user.is_deleted:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
             try:
                 auth.delete_user(uid)
             except auth.FirebaseError:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {
+                        "message": "Firebase Error",
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
             # 우선 세션 만료
             sessions = UserSession.objects.filter(
@@ -64,13 +69,10 @@ class UserDelete(APIView):
             for post in posts:
                 post.is_deleted = True
                 post.deleted_at = timezone.now()
-                post.deleted_reason = UserDeleteReason.objects.get(id=1)
+                post.deleted_reason = PostDeleteReason.objects.get(id=1)
                 post.save()
 
-        except ValueError:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        except auth.FirebaseError:
+        except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         return Response(status=HTTP_200_OK)
