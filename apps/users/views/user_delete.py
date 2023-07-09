@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from rest_framework import exceptions
+from rest_framework import status
 from rest_framework.status import HTTP_200_OK
 from firebase_admin import auth
 
@@ -39,11 +39,11 @@ class UserDelete(APIView):
 
         try:
             if user.is_deleted:
-                raise exceptions.NotFound
+                return Response(status=status.HTTP_400_BAD_REQUEST)
             try:
                 auth.delete_user(uid)
             except auth.FirebaseError:
-                raise exceptions.NotFound
+                return Response(status=status.HTTP_400_BAD_REQUEST)
 
             # 우선 세션 만료
             sessions = UserSession.objects.filter(
@@ -59,10 +59,18 @@ class UserDelete(APIView):
             user.deleted_at = timezone.now()
             user.save()
 
+            # 탈퇴한 유저의 포스트 삭제 처리
+            posts = user.posts.all()
+            for post in posts:
+                post.is_deleted = True
+                post.deleted_at = timezone.now()
+                post.deleted_reason = UserDeleteReason.objects.get(id=1)
+                post.save()
+
         except ValueError:
-            raise exceptions.NotFound
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         except auth.FirebaseError:
-            raise exceptions.NotFound
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         return Response(status=HTTP_200_OK)

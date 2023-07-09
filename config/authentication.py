@@ -6,7 +6,8 @@ from apps.users.models import User, UserSession
 from firebase_admin import auth
 from firebase_admin import credentials
 from firebase_admin import initialize_app
-from rest_framework import authentication, exceptions
+from rest_framework import authentication, exceptions, status
+from rest_framework.response import Response
 
 from .exceptions import FirebaseError
 from .exceptions import NoAuthToken
@@ -81,23 +82,31 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
             raise FirebaseError()
 
         try:
-            user = User.objects.get(uid=uid)
+            user = User.objects.get(uid=uid, is_deleted=False)
         except User.DoesNotExist:
-            # if user is not exist, create user
-            username_check = User.objects.filter(username=username).exists()
-            # 만약 username이 존재한다면, username에 1씩 증가하는 숫자를 붙여준다.
-            if username_check:
-                num = User.objects.filter(username__startswith=username).count() + 1
-                username = f"{username}_{num}"
+            # uid가 일치하지만, 이미 삭제된 유저라면
+            if User.objects.filter(uid=uid, is_deleted=True).exists():
+                return Response(
+                    {"message": "This user is deleted"},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
 
-            user = User.objects.create(
-                uid=uid,
-                username=username,
-                email=email,
-                name=name,
-                date_joined=now,
-                firebase_picture=picture,
-            )
+            else:
+                # if user is not exist, create user
+                username_check = User.objects.filter(username=username).exists()
+                # 만약 username이 존재한다면, username에 1씩 증가하는 숫자를 붙여준다.
+                if username_check:
+                    num = User.objects.filter(username__startswith=username).count() + 1
+                    username = f"{username}_{num}"
+
+                user = User.objects.create(
+                    uid=uid,
+                    username=username,
+                    email=email,
+                    name=name,
+                    date_joined=now,
+                    firebase_picture=picture,
+                )
 
         user.last_login = now
         user.save()

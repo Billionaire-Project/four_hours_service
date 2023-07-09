@@ -41,8 +41,15 @@ class Test(APIView):
     )
     def get(self, request):
         # random_generated_to_post()
-        tmp = PostGenerated.objects.filter(
-            updated_at__gte=datetime.datetime.now() - datetime.timedelta(days=1),
-        ).all()
-        print(len(tmp))
+        # tmp = PostGenerated.objects.filter(
+        #     updated_at__gte=datetime.datetime.now() - datetime.timedelta(days=1),
+        # ).all()
+        # print(len(tmp))
+
+        user = request.user
+
+        posts = user.posts.all()
+
+        print(len(posts))
+
         return Response(status=status.HTTP_200_OK)

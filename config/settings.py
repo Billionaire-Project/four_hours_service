@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import os
 
-ENTRY_PORT = int(os.environ.get("ENTRY_PORT", default=8000))
+ENTRY_PORT = int(os.environ.get("ENTRY_PORT", default=3333))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +25,6 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = int(os.environ.get("DEBUG", default=0))
 
-# TODO: Change this to your domain
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
@@ -148,8 +147,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Auth
 AUTH_USER_MODEL = "users.User"
-
-# TODO: Split settings.py into multiple files for Production and
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (

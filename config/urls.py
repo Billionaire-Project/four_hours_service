@@ -9,7 +9,7 @@ from scheduler import cron_jobs
 
 import os
 
-ENTRY_PORT = int(os.environ.get("ENTRY_PORT", default=8000))
+ENTRY_PORT = int(os.environ.get("ENTRY_PORT", default=3333))
 
 urlpatterns = [
     path("admin/", admin.site.urls),

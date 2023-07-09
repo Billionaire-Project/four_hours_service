@@ -1,14 +1,21 @@
 from datetime import datetime, timedelta
-from pickle import FALSE
-from typing import Optional
 from apps.users.models import User
-from apps.posts.models import Post, PostReceipt
+from apps.posts.models import Post
+import os
 
 
 """
 Receipt 관련 로직 정리
-TODO: Debuging용으로 4시간 짜리를 1분 짜리로 바꿔둠
 """
+
+ENTRY_PORT = int(os.environ.get("ENTRY_PORT", default=3333))
+
+if ENTRY_PORT == 4444:
+    prod_or_test_diff = datetime.now() - timedelta(hours=4)
+    prod_or_test = timedelta(hours=4)
+else:
+    prod_or_test_diff = datetime.now() - timedelta(minutes=1)
+    prod_or_test = timedelta(minutes=1)
 
 
 # 24시간 이내에 쓰여진 post가 있는지 확인
@@ -25,8 +32,7 @@ def post_in_24(user: User) -> bool:
 def post_in_4(user: User) -> bool:
     queryset = Post.objects.filter(
         is_deleted=False,
-        # updated_at__gte=datetime.now() - timedelta(hours=4),
-        updated_at__gte=datetime.now() - timedelta(minutes=1),
+        updated_at__gte=prod_or_test_diff,
         user=user.id,
     )
     return queryset.exists()
@@ -36,8 +42,7 @@ def post_in_4(user: User) -> bool:
 def post_delete_count_check(user: User) -> int:
     queryset = Post.objects.filter(
         is_deleted=True,
-        # updated_at__gte=datetime.now() - timedelta(hours=4),
-        updated_at__gte=datetime.now() - timedelta(minutes=1),
+        updated_at__gte=prod_or_test_diff,
         user=user.id,
     )
 
@@ -59,8 +64,7 @@ def callback_by_client_api(user: User) -> dict:
         last_deleted_post = (
             Post.objects.filter(
                 is_deleted=True,
-                # updated_at__gte=datetime.now() - timedelta(hours=4),
-                updated_at__gte=datetime.now() - timedelta(minutes=1),
+                updated_at__gte=prod_or_test_diff,
                 user=user.id,
             )
             .order_by("-updated_at")
@@ -69,8 +73,7 @@ def callback_by_client_api(user: User) -> dict:
         result["is_readable"] = False
         result["readable_ended_at"] = None
         result["is_postable"] = False
-        # result["postable_at"] = last_deleted_post.updated_at + timedelta(hours=4)
-        result["postable_at"] = last_deleted_post.updated_at + timedelta(minutes=1)
+        result["postable_at"] = last_deleted_post.updated_at + prod_or_test
         return result
 
     if post_in_24(user):
@@ -93,16 +96,14 @@ def callback_by_client_api(user: User) -> dict:
         queryset = (
             Post.objects.filter(
                 is_deleted=False,
-                # updated_at__gte=datetime.now() - timedelta(hours=4),
-                updated_at__gte=datetime.now() - timedelta(minutes=1),
+                updated_at__gte=prod_or_test_diff,
                 user=user.id,
             )
             .order_by("-updated_at")
             .first()
         )
         result["is_postable"] = False
-        # result["postable_at"] = queryset.updated_at + timedelta(hours=4)
-        result["postable_at"] = queryset.updated_at + timedelta(minutes=1)
+        result["postable_at"] = queryset.updated_at + prod_or_test
     else:
         result["is_postable"] = True
         result["postable_at"] = None

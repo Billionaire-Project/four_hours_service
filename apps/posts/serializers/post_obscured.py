@@ -3,7 +3,6 @@ from rest_framework import serializers
 from apps.posts.models import PostObscured
 
 
-# TODO: 앞단과 얘기해서 변경해야 할 부분이 많다!
 class PostObscuredSerializer(serializers.ModelSerializer):
     content = serializers.SerializerMethodField()
     is_owner = serializers.SerializerMethodField()
