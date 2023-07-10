@@ -13,7 +13,7 @@ from scheduler.random_generated_to_post import random_generated_to_post
 
 import os
 
-ENTRY_PORT = int(os.environ.get("ENTRY_PORT", default=3333))
+ENTRY_PORT = int(os.environ.get("ENTRY_PORT", default=3030))
 
 sched = BackgroundScheduler(timezone="Asia/Seoul")
 sched.start()
@@ -31,7 +31,7 @@ def cron_jobs():
     sched.add_job(
         post_generatred_post, "interval", seconds=1, id="post_generatred_post"
     )
-    if ENTRY_PORT == 3333:
+    if ENTRY_PORT == 3030:
         sched.add_job(
             random_generated_to_post,
             "cron",

@@ -8,9 +8,9 @@ import os
 Receipt 관련 로직 정리
 """
 
-ENTRY_PORT = int(os.environ.get("ENTRY_PORT", default=3333))
+ENTRY_PORT = int(os.environ.get("ENTRY_PORT", default=3030))
 
-if ENTRY_PORT == 4444:
+if ENTRY_PORT == 4040:
     prod_or_test_diff = datetime.now() - timedelta(hours=4)
     prod_or_test = timedelta(hours=4)
 else:

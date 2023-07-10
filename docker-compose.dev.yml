@@ -5,11 +5,11 @@ services:
     build:
       context: .
       dockerfile: ${DOCKERFILE}
-    command: python manage.py runserver 0.0.0.0:3333
+    command: python manage.py runserver 0.0.0.0:3030
     volumes:
       - ./:/usr/src/four_hours_service/
     ports:
-      - 3333:3333
+      - 3030:3030
     env_file: ${ENVFILE}
 
   db:
