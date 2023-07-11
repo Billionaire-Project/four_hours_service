@@ -25,5 +25,5 @@ export DOCKER_DEFAULT_PLATFORM=linux/amd64
 
 ```bash
 # in dev
-docker-compose --env-file .env.dev up --build
+sudo docker-compose -f docker-compose.dev.yml --env-file .env.dev up -d
 ```
