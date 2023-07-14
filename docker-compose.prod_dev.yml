@@ -6,11 +6,11 @@ services:
     build:
       context: .
       dockerfile: ${DOCKERFILE}
-    command: python manage.py runserver 0.0.0.0:${DJANGO_PORT}
+    command: python manage.py runserver 0.0.0.0:${ENTRY_PORT}
     volumes:
       - ./:/usr/src/four_hours_service/
     ports:
-      - ${DJANGO_PORT}:${DJANGO_PORT}
+      - ${ENTRY_PORT}:${ENTRY_PORT}
     env_file: ${ENVFILE}
 
   db_prod:
@@ -29,4 +29,4 @@ services:
     command: -p ${SQL_PORT}
 
 volumes:
-  postgres_data:
+  postgres_data_prod:
