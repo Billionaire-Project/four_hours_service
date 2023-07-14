@@ -17,6 +17,7 @@ class Topic(CommonModel):
 
     id = models.AutoField(primary_key=True)
     topic = models.CharField(max_length=100)
+    content = models.CharField(max_length=1000, null=True)
 
     # 해당 토픽이 사용된 적 있는지
     is_used = models.BooleanField(default=False)

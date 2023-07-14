@@ -11,7 +11,10 @@ class TopicAdmin(admin.ModelAdmin):
         (
             "Topic",
             {
-                "fields": ("topic",),
+                "fields": (
+                    "topic",
+                    "content",
+                ),
             },
         ),
         (
