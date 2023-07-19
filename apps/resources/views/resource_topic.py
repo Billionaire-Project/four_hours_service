@@ -22,6 +22,6 @@ class ResourceTopic(APIView):
         tmp = Topic.objects.get(id=1)
         tmp = {
             "topic": tmp.topic,
-            "content": "개같은 개발",
+            "content": tmp.content,
         }
         return Response(tmp, status=status.HTTP_200_OK)
