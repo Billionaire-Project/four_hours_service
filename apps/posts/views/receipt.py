@@ -10,13 +10,6 @@ Receipt 관련 로직 정리
 
 ENTRY_PORT = int(os.environ.get("ENTRY_PORT", default=3030))
 
-if ENTRY_PORT == 4040:
-    prod_or_test_diff = datetime.now() - timedelta(hours=4)
-    prod_or_test = timedelta(hours=4)
-else:
-    prod_or_test_diff = datetime.now() - timedelta(minutes=1)
-    prod_or_test = timedelta(minutes=1)
-
 
 # 24시간 이내에 쓰여진 post가 있는지 확인
 def post_in_24(user: User) -> bool:
@@ -30,6 +23,10 @@ def post_in_24(user: User) -> bool:
 
 # 4시간 이내에 쓰여진 post가 있는지 확인
 def post_in_4(user: User) -> bool:
+    if ENTRY_PORT == 4040:
+        prod_or_test_diff = datetime.now() - timedelta(hours=4)
+    else:
+        prod_or_test_diff = datetime.now() - timedelta(minutes=1)
     queryset = Post.objects.filter(
         is_deleted=False,
         updated_at__gte=prod_or_test_diff,
@@ -40,6 +37,10 @@ def post_in_4(user: User) -> bool:
 
 # 4시간 이내에 몇번이나 삭제했는지 확인
 def post_delete_count_check(user: User) -> int:
+    if ENTRY_PORT == 4040:
+        prod_or_test_diff = datetime.now() - timedelta(hours=4)
+    else:
+        prod_or_test_diff = datetime.now() - timedelta(minutes=1)
     queryset = Post.objects.filter(
         is_deleted=True,
         updated_at__gte=prod_or_test_diff,
@@ -50,6 +51,12 @@ def post_delete_count_check(user: User) -> int:
 
 
 def callback_by_client_api(user: User) -> dict:
+    if ENTRY_PORT == 4040:
+        prod_or_test_diff = datetime.now() - timedelta(hours=4)
+        prod_or_test = timedelta(hours=4)
+    else:
+        prod_or_test_diff = datetime.now() - timedelta(minutes=1)
+        prod_or_test = timedelta(minutes=1)
     deleted_stack = post_delete_count_check(user)
 
     result = {
