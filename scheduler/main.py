@@ -23,21 +23,21 @@ def cron_jobs():
     # 매일 00시, 12시에 크롤링 시작
     sched.add_job(crawling_sports_news, "cron", hour="0, 12")
     sched.add_job(crawling_entertain_news, "cron", hour="0, 12")
-    sched.add_job(gpt_obscure, "interval", seconds=1, id="gpt_obscure")
-    sched.add_job(article_summary, "interval", seconds=1, id="article_summary")
-    sched.add_job(
-        gpt_fake_post_by_article, "interval", seconds=1, id="gpt_fake_post_by_article"
-    )
-    sched.add_job(
-        post_generatred_post, "interval", seconds=1, id="post_generatred_post"
-    )
-    if ENTRY_PORT == 3030:
-        sched.add_job(
-            random_generated_to_post,
-            "cron",
-            hour="0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22",
-            id="random_generated_to_post",
-        )
+    # sched.add_job(gpt_obscure, "interval", seconds=1, id="gpt_obscure")
+    # sched.add_job(article_summary, "interval", seconds=1, id="article_summary")
+    # sched.add_job(
+    #     gpt_fake_post_by_article, "interval", seconds=1, id="gpt_fake_post_by_article"
+    # )
+    # sched.add_job(
+    #     post_generatred_post, "interval", seconds=1, id="post_generatred_post"
+    # )
+    # if ENTRY_PORT == 3030:
+    #     sched.add_job(
+    #         random_generated_to_post,
+    #         "cron",
+    #         hour="0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22",
+    #         id="random_generated_to_post",
+    #     )
 
 
 # sched = BackgroundScheduler()  # django와는 다른 thread에서 돌아감

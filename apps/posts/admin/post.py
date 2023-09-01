@@ -15,6 +15,7 @@ class PostAdmin(admin.ModelAdmin):
                     # "id",
                     "user",
                     "content",
+                    "created_at",
                 ),
             },
         ),
@@ -29,11 +30,11 @@ class PostAdmin(admin.ModelAdmin):
             },
         ),
     )
-
     list_display = (
         "id",
         "__str__",
         "user",
+        "created_at",
         "is_deleted",
     )
     list_display_links = (
@@ -43,3 +44,7 @@ class PostAdmin(admin.ModelAdmin):
     search_fields = [
         "user__username",
     ]
+    readonly_fields = (
+        "created_at",
+        "deleted_at",
+    )
